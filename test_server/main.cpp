@@ -3,8 +3,6 @@
 #include <iostream>
 #include <Windows.h>
 
-extern void WINAPI server_start();
-
 int main() {
 	server_start();
 	getchar();

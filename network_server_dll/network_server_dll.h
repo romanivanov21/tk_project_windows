@@ -6,39 +6,48 @@
 *																   *
 ********************************************************************/
 
-#ifndef _SERVER_NETWORK_DLL_H_
+#ifndef _NETWORK_SERVER_DLL_H_
+#define _NETWORK_SERVER_DLL_H_
 
-#define SERVER_NETWORK_API extern __declspec(dllexport)
-#else
-#define SERVER_NETWORK_API extern __declspec(dllimport)
-
+#define NETWORK_SERVER_API extern __declspec(dllexport)
+/*#else
+#define NETWORK_SERVER_API extern __declspec(dllimport)
+*/
 /*********************************************************
 * define ServerNetworkDll version						 *
 **********************************************************/
-#define SERVER_NETWORK_DLL_VERSION 0x01
-
-std::size_t read_complete(char *buff,
-						  const boost::system::error_code &err, 
-						  std::size_t bytes);
+#define NETWORK_SERVER_DLL_VERSION 0x01
 
 /*********************************************************
 * Функция server_start запускает сервер					 *
 **********************************************************/
-SERVER_NETWORK_API void WINAPI server_start();
+NETWORK_SERVER_API void server_start();
+extern "C" void  gostdecrypt( unsigned long const *in_data, unsigned long *out_data, unsigned long const *gost_key);
+/*
+#include <boost/asio.hpp>
+#include <string>
 
-/*class server_network
+class server : private boost::noncopyable
 {
 public:
-	server_network();
-	~server_network();
+	explicit server(const std::string &ip_address, const std::string &port);
+	~server();
 
-	SERVER_NETWORK_API void WINAPI server_start();
-	SERVER_NETWORK_API void WINAPI read_message();
-	SERVER_NETWORK_API void WINAPI write_message();
-
+	void server_start();
 private:
-	boost::asio::io_service service;
 
-};
-*/
+	std::string port_;
+
+	boost::asio::io_service io_service_;
+	boost::asio::ip::tcp::acceptor acceptor_;
+	boost::asio::ip::tcp::socket socket_;
+	boost::asio::ip::icmp::socket socket_icmp_;
+
+	std::string ip_address_;
+
+	enum { buffer_size = 1024 };
+	char buff_in_[buffer_size];
+	char buff_out_[buffer_size];
+};*/
+
 #endif
