@@ -22,7 +22,9 @@
 * Функция server_start запускает сервер					 *
 **********************************************************/
 NETWORK_SERVER_API void server_start();
+extern "C" void key_box_init();
 extern "C" void  gostdecrypt( unsigned long const *in_data, unsigned long *out_data, unsigned long const *gost_key);
+extern "C" void  gostcrypt( unsigned long const *in_data, unsigned long *out_data, unsigned long const *gost_key);
 /*
 #include <boost/asio.hpp>
 #include <string>
@@ -50,4 +52,9 @@ private:
 	char buff_out_[buffer_size];
 };*/
 
+typedef unsigned long word32;
+typedef unsigned char byte;
+
+void word32_to_byte(word32 *word32_, byte *byte_);
+void byte_to_word32( byte *byte_, word32 *word32_);
 #endif

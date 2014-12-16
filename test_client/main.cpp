@@ -20,7 +20,7 @@ void sync_echo(std::string msg) {
 	char destBuff[1024];
 	memset(destBuff,0,1024);
 
-	int bytes_recived = sock.read_some(buffer(destBuff,1024));
+	int bytes_recived = sock.read_some(buffer(destBuff,8));
 	std::string server_message(destBuff);
 	std::cout<<server_message<<std::endl;
     sock.close();
