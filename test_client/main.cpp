@@ -3,55 +3,17 @@
 #include <stdio.h>
 #endif
 
+#include "..\shared_code\gost_include.h"
+#include "..\shared_code\gost_types_convert.h"
+
 #include <iostream>
 #include <boost/asio.hpp>
 using namespace boost::asio;
 using boost::system::error_code;
 io_service service;
-extern "C" void key_box_init();
-extern "C" void gostdecrypt( unsigned long const *in_data, unsigned long *out_data, unsigned long const *gost_key);
-extern "C" void gostcrypt( unsigned long const *in_data, unsigned long *out_data, unsigned long const *gost_key);
-typedef unsigned long word32;
 
-typedef unsigned char byte;
 ip::tcp::endpoint ep( ip::address::from_string("127.0.0.1"), 8001);
-void word32_to_byte(word32 *word32_, byte *byte_)
-{
-	memset(byte_, 0, 8);
-	word32 temp = word32_[0];
-	int s = 24;
-	for(unsigned int i = 0; i < 4; i++)
-	{
-		word32_[0] = temp;
-		word32_[0] = word32_[0] >> s;
-		byte_[i] |= word32_[0];
-		s = s - 8;
-	}
-	temp = word32_[1];
-	for(unsigned int i = 4; i < 8; i++)
-	{
-		word32_[1] = temp;
-		word32_[1] = word32_[1] >> s;
-		byte_[i] |= word32_[1];
-		s = s - 8;
-	}
-}
 
-void byte_to_word32( byte *byte_, word32 *word32_)
-{
-	memset(word32_, 0, 8);
-
-	for(unsigned int i = 0; i < 4; i++)
-	{
-		word32_[0] = word32_[0] << 8;
-		word32_[0] |= byte_[i];
-	}
-	for(unsigned int i = 4; i < 8; i++)
-	{
-		word32_[1] = word32_[1] << 8;
-		word32_[1] |= byte_[i];
-	}
-}
 void sync_echo() {
     ip::tcp::socket sock(service);
     sock.connect(ep);
@@ -62,8 +24,7 @@ void sync_echo() {
 	memset(destBuff,0,8);
 
 	int bytes_recived = sock.read_some(buffer(destBuff,8));
-	 sock.close();
-	//std::string server_message(destBuff);
+	sock.close();
 	for(std::size_t i = 0; i < 8; i++)
 	{
 		std::cout<<destBuff[i];

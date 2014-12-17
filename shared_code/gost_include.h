@@ -10,7 +10,7 @@
 #ifndef _GOST_INCLUDE_H_
 #define _GOST_INCLUDE_H_
 
-#include "crypt_gost_types.h"
+#include "..\crypt_gost_28147-89\crypt_gost_types.h"
 
 /*******************************************************************
 * Функция key_box_init() инициализирует ключ шифрования			   *
