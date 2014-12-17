@@ -6,7 +6,6 @@
 *																   *
 ********************************************************************/
 
-//#include"..\crypt_gost_28147-89\crypt_gost_28147-89_API.h"
 #include"network_server_dll.h"
 #include"inc_boost_heders.h"
 
@@ -56,7 +55,6 @@ NETWORK_SERVER_API void server_start()
 											boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(),
 											8001));
 	enum { buffer_size = 1024 };
-	//char buff[buffer_size];
 	boost::asio::ip::tcp::socket sock(service);
 	acceptor.accept(sock);
 
@@ -82,12 +80,16 @@ NETWORK_SERVER_API void server_start()
 	byte crypt_buff_byte[8];
 	word32 crypt_buff_word32[2];
 
-	strcpy_s(buff_byte,"I is se");
+	strcpy_s(buff_byte,"Roman21");
 	byte_to_word32((byte*)buff_byte,buff_word32);
 	key_box_init();
 	gostcrypt(buff_word32,crypt_buff_word32,key);
 	word32_to_byte(crypt_buff_word32,crypt_buff_byte);
-	//strcpy_s(buff,"I is server");
+	for(std::size_t i = 0; i < 8; i++)
+	{
+		std::cout<<crypt_buff_byte[i];
+	}
+	std::cout<<std::endl;
 	sock.write_some(boost::asio::buffer(crypt_buff_byte,8));
 	sock.close();
 }
