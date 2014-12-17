@@ -16,7 +16,7 @@ typedef unsigned int word32;
 typedef unsigned long word32;
 #endif
 
-typedef unsigned char key;
+typedef unsigned char byte;
 
 enum 
 { 
