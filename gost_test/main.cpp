@@ -14,26 +14,27 @@ int main(void)
 {
 	word32 word32_[2];
 	byte byte_[8];
-	byte_[0] = 1;
-	byte_[1] = 2;
-	byte_[2] = 3;
-	byte_[3] = 4;
-	byte_[4] = 5;
-	byte_[5] = 6;
-	byte_[6] = 7;
-	byte_[7] = 8;
 
-	for(int i = 0; i < 8; i++)
+	word32 key_word32[8];
+	byte key_byte[32];
+
+	memset(key_byte, 5, 32);
+
+	byte_to_word32_key(key_byte, key_word32);
+	word32_to_byte_key(key_word32, key_byte);
+
+	for(int i = 0; i < 32; i++)
 	{
-		printf("%x",byte_[i]);
+		printf("%x",key_byte[i]);
 	}
-	byte_to_word32(byte_,word32_);
-	word32_to_byte(word32_,byte_);
+	/*byte_to_word32_data(byte_,word32_);
+	word32_to_byte_data(word32_,byte_);
 	printf("\n");
 	for(int i = 0; i < 8; i++)
 	{
 		printf("%d",byte_[i]);
 	}
+	*/
 	printf("\nAll tests passed.\n");
 	getchar();
 	return 0;

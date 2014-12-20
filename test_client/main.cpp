@@ -30,22 +30,23 @@ void sync_echo() {
 		std::cout<<destBuff[i];
 	}
 	std::cout<<std::endl;
-	word32 key[8];
+	word32 key_word32[8];
 	word32 crypt_data[2];
 	word32 decrypt_data_word32[2];
 	byte decrypt_data_byte[8];
-	key[0] = 5; 
-	key[1] = 4; 
-	key[2] = 3; 
-	key[3] = 2; 
-	key[4] = 1; 
-	key[5] = 0; 
-	key[6] = 1; 
-	key[7] = 5;
+	byte key_byte[32];
+	key_word32[0] = 5; 
+	key_word32[1] = 4; 
+	key_word32[2] = 3; 
+	key_word32[3] = 2; 
+	key_word32[4] = 1; 
+	key_word32[5] = 0; 
+	key_word32[6] = 1; 
+	key_word32[7] = 5;
 	key_box_init();
-	byte_to_word32((byte*)destBuff,crypt_data);
-	gostdecrypt(crypt_data,decrypt_data_word32,key);
-	word32_to_byte(decrypt_data_word32,decrypt_data_byte);
+	byte_to_word32_data((byte*)destBuff,crypt_data);
+	gostdecrypt(crypt_data,decrypt_data_word32,key_word32);
+	word32_to_byte_data(decrypt_data_word32,decrypt_data_byte);
 	for(std::size_t i = 0 ; i < 8; i++)
 	{
 		std::cout<<decrypt_data_byte[i];

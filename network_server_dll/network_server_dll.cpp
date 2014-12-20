@@ -83,10 +83,10 @@ NETWORK_SERVER_API void server_start()
 	word32 crypt_buff_word32[2];
 
 	strcpy_s(buff_byte,"Roman21");
-	byte_to_word32((byte*)buff_byte,buff_word32);
+	byte_to_word32_data((byte*)buff_byte,buff_word32);
 	key_box_init();
 	gostcrypt(buff_word32,crypt_buff_word32,key);
-	word32_to_byte(crypt_buff_word32,crypt_buff_byte);
+	word32_to_byte_data(crypt_buff_word32,crypt_buff_byte);
 	for(std::size_t i = 0; i < 8; i++)
 	{
 		std::cout<<crypt_buff_byte[i];
