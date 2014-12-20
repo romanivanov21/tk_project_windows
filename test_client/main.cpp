@@ -23,7 +23,7 @@ void sync_echo() {
 	char destBuff[8];
 	memset(destBuff,0,8);
 
-	int bytes_recived = sock.read_some(buffer(destBuff,8));
+	boost::uint32_t bytes_recived = sock.read_some(buffer(destBuff,8));
 	sock.close();
 	for(std::size_t i = 0; i < 8; i++)
 	{

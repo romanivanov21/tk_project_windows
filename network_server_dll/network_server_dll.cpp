@@ -61,7 +61,7 @@ NETWORK_SERVER_API void server_start()
 	acceptor.accept(sock);
 
 	char destBuff[buffer_size];
-	int bytes = sock.read_some(boost::asio::buffer(destBuff,buffer_size));
+	boost::int32_t bytes = sock.read_some(boost::asio::buffer(destBuff,buffer_size));
     std::string msg(destBuff);
     if(DEBUG_VERSION)
 	{
