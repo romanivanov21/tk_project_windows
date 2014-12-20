@@ -34,7 +34,7 @@ void sync_echo() {
 	word32 crypt_data[2];
 	word32 decrypt_data_word32[2];
 	byte decrypt_data_byte[8];
-	byte key_byte[32];
+
 	key_word32[0] = 5; 
 	key_word32[1] = 4; 
 	key_word32[2] = 3; 
