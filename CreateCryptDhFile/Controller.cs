@@ -27,7 +27,7 @@ namespace CreateCryptDhFile
             {
                 try
                 {
-                    directiory = directiory + @"\gkeydh.cf";
+                    directiory = directiory + @"\gkeydh.bin";
                     if (File.Exists(directiory))
                     {
                          //Здесь может быть реализована удалить старый файл или нет

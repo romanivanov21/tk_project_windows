@@ -21,6 +21,9 @@
     <ClInclude Include="crypt_gost_types.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="diffy_helman.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="crypt_gost_28147-89_API.c">

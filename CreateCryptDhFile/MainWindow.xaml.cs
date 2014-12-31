@@ -56,13 +56,20 @@ namespace CreateCryptDhFile
         {
             if (flag)
             {
-               /* var img1 = new BitmapImage();
-                img1.BeginInit();
-                img1.UriSource = new Uri(@"D:\Диплом\Рабочий репозиторий\tk_project_windows\CreateCryptDhFile\ImageRunOk.jpg", UriKind.Absolute);
-                img1.CacheOption = BitmapCacheOption.OnLoad;
-                img1.EndInit();
-                Img.DataContext = img1;
-                */
+               var imgTrue = new BitmapImage();
+               imgTrue.BeginInit();
+               imgTrue.UriSource = new Uri(@"D:\Диплом\Рабочий репозиторий\tk_project_windows\CreateCryptDhFile\ImageRunOk.jpg", UriKind.Absolute);
+               imgTrue.CacheOption = BitmapCacheOption.OnLoad;
+               imgTrue.EndInit();
+               Img.DataContext = imgTrue;
+            }
+            else
+            {
+                var imgFalse = new BitmapImage();
+                imgFalse.BeginInit();
+                imgFalse.UriSource = new Uri(@"D:\Диплом\Рабочий репозиторий\tk_project_windows\CreateCryptDhFile\ImageRunOk.jpg", UriKind.Absolute);
+                imgFalse.EndInit();
+                Img.DataContext = imgFalse;
             }
         }
         #endregion
