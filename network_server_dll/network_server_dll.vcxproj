@@ -87,6 +87,7 @@
   <ItemGroup>
     <ClInclude Include="inc_boost_heders.h" />
     <ClInclude Include="network_server_dll.h" />
+    <ClInclude Include="server_timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="network_server_dll.cpp" />

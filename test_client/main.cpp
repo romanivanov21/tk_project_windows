@@ -8,6 +8,9 @@
 
 #include <iostream>
 #include <boost/asio.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
+
 using namespace boost::asio;
 using boost::system::error_code;
 io_service service;
@@ -17,9 +20,10 @@ ip::tcp::endpoint ep( ip::address::from_string("127.0.0.1"), 8001);
 void sync_echo() {
     ip::tcp::socket sock(service);
     sock.connect(ep);
-	char buf[1024];
+	/*char buf[1024];
 	strcpy_s(buf,"I is client");
 	sock.write_some(buffer(buf,1024));
+	*/
 	char destBuff[8];
 	memset(destBuff,0,8);
 

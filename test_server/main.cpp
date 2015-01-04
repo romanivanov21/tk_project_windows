@@ -1,10 +1,12 @@
-//#include "..\network_server_dll\network_server_dll.h"
-
 #include <iostream>
 #include <Windows.h>
 
+void extern server_start(byte *data, std::size_t size);
+
 int main() {
-	//server_start();
+	char data_sending[8];
+	strcpy_s(data_sending,"1234567");
+	server_start((byte*)data_sending,8);
 	getchar();
 
 	return 0;
