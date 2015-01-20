@@ -222,7 +222,23 @@ NETWORK_SERVER_API void server_start(byte *data, std::size_t size)
 	{
 		std::cout<<time.current_date_time_string()<<std::endl;
 		s.start();
+		byte data_[8];
+		std::size_t size_;
+		if(s.read_bytes(data_,size_) == -1)
+		{
+			std::cout<<"Не удалось принять данные"<<std::endl;
+		}
 		s.send_bytes(data,size);
+		for(std::size_t i = 0; i < 8; i++)
+		{
+			std::cout<<data_[i];
+		}
+		std::cout<<std::endl;
+		for(int i = 0; i < 8; i++)
+		{
+			std::cout<<data[i];
+		}
+		std::cout<<std::endl;
 	}
 	catch(std::string s)
 	{

@@ -11,8 +11,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crypt_gost_28147-89", "cryp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gost_test", "gost_test\gost_test.vcxproj", "{72270973-A243-4649-881C-319AE78E44E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateCryptDhFile", "CreateCryptDhFile\CreateCryptDhFile.csproj", "{6A02295C-7740-48D0-9BC8-A735D1AAB858}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,16 +76,6 @@ Global
 		{72270973-A243-4649-881C-319AE78E44E3}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{72270973-A243-4649-881C-319AE78E44E3}.Release|Win32.ActiveCfg = Release|Win32
 		{72270973-A243-4649-881C-319AE78E44E3}.Release|Win32.Build.0 = Release|Win32
-		{6A02295C-7740-48D0-9BC8-A735D1AAB858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6A02295C-7740-48D0-9BC8-A735D1AAB858}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6A02295C-7740-48D0-9BC8-A735D1AAB858}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{6A02295C-7740-48D0-9BC8-A735D1AAB858}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{6A02295C-7740-48D0-9BC8-A735D1AAB858}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{6A02295C-7740-48D0-9BC8-A735D1AAB858}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6A02295C-7740-48D0-9BC8-A735D1AAB858}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6A02295C-7740-48D0-9BC8-A735D1AAB858}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{6A02295C-7740-48D0-9BC8-A735D1AAB858}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{6A02295C-7740-48D0-9BC8-A735D1AAB858}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

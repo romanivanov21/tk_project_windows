@@ -17,11 +17,13 @@ typedef unsigned long word32;
 #endif
 
 typedef unsigned char byte;
+typedef unsigned short word16;
 
 enum 
 { 
 	key_size16 = 16, 
 	key_size256 = 256,
+	key_size32 = 32,
 	key_size8 = 8,
 	io_size2 = 2
 };

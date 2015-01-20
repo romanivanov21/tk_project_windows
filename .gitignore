@@ -4,6 +4,8 @@ tk_project_windows\test_client\Debug\
 tk_project_windows\test_server\Debug\
 tk_project_windows\tk_project_windows.sdf
 tk_project_windows\crypt_gost_28147-89\Debug
+import_library\boost_1_57_0\
+import_library\cryptopp562\
 *.sdf
 *.[Oo]bj
 *.user

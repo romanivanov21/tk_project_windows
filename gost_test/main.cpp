@@ -6,10 +6,11 @@
 *																   *
 ********************************************************************/
 
-#include "gost_API_test.h"
-#include <iostream>
+#include "..\crypt_gost_28147-89\diffy_helman.h"
 
-void gost_crypt_data(byte *data, std::size_t size)
+#include <iostream>
+#include <ctime>
+/*void gost_crypt_data(byte *data, std::size_t size)
 {
 	word32 key[8];
 	key[0] = 5; 
@@ -117,9 +118,37 @@ void gost_decrypt_data(byte *data, std::size_t size)
 		i_blocks++;
 	}
 }
+*/
 int main(void)
 {
-	char data[15];
+	diffy_helm *dh = new diffy_helm();
+	/*byte p[32];
+	byte q[32];
+	byte g;
+	*/
+
+	byte A[32];
+	/*dh->get_p(p, (sizeof(byte) * 32));
+	dh->get_q(q, (sizeof(byte) * 32));
+	dh->get_g(g);
+	*/
+	std::size_t time_1 = clock();
+	dh->generate_A(A, 32);
+	delete dh;
+		
+	/*for(std::size_t i = 0; i < 32; i++)
+	{
+		std::cout<<std::hex<<(int)p[i];
+	}
+	std::cout<<std::endl;
+	for(std::size_t i = 0; i < 32; i++)
+	{
+		std::cout<<std::hex<<(int)q[i];
+	}
+	std::cout<<std::endl;
+	std::cout<<std::hex<<(int)g<<std::endl; */
+
+/*	char data[15];
 	strcpy_s(data,"IvanovRoman021");
 	gost_crypt_data((byte*)data,9);
 	//init_gost(data);
@@ -134,6 +163,7 @@ int main(void)
 		std::cout<<data[i];
 	}
 	std::cout<<std::endl;
+	*/
 	printf("\nAll tests passed.\n");
 	getchar();
 	return 0;
