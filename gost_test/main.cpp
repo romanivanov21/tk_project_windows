@@ -7,6 +7,7 @@
 ********************************************************************/
 
 #include "..\crypt_gost_28147-89\diffy_helman.h"
+#include "..\shared_code\gost_include.h"
 
 #include <iostream>
 #include <ctime>
@@ -126,7 +127,6 @@ int main(void)
 	byte q[32];
 	byte g;
 	*/
-
 	byte A[32];
 	/*dh->get_p(p, (sizeof(byte) * 32));
 	dh->get_q(q, (sizeof(byte) * 32));
@@ -135,7 +135,8 @@ int main(void)
 	std::size_t time_1 = clock();
 	dh->generate_A(A, 32);
 	delete dh;
-		
+	
+	key_box_init();
 	/*for(std::size_t i = 0; i < 32; i++)
 	{
 		std::cout<<std::hex<<(int)p[i];

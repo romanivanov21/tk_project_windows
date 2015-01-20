@@ -13,7 +13,7 @@
 
 #define CRYPT_GOST_28147_89_API_VERSION 0x01
 
-
+#include "crypt_gost_types.h"
 
 
 /*******************************************************************
