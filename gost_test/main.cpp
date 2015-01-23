@@ -11,6 +11,10 @@
 
 #include <iostream>
 #include <ctime>
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+
 /*void gost_crypt_data(byte *data, std::size_t size)
 {
 	word32 key[8];
@@ -137,6 +141,20 @@ int main(void)
 	delete dh;
 	
 	key_box_init();
+
+	unsigned char hash[64];
+	unsigned int i = 0;
+	byte tests[6];
+	memcpy(tests, "Roman", sizeof(byte) * 5);
+	hash_512(tests, 5,hash);
+	for(i = 0; i < 64; i++)
+	{
+		printf("%x",hash[i]);
+	}
+	printf("\n");
+	char k1[key_size16] = {0x0, 0x0,  0x0,  0x0,  0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+	const std::size_t s1 = strlen("F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\Debug\\ginit.bin");
+	read_vector_init("F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\Debug\\ginit.bin",&s1);
 	/*for(std::size_t i = 0; i < 32; i++)
 	{
 		std::cout<<std::hex<<(int)p[i];

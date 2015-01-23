@@ -84,13 +84,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="crypt_gost_28147-89_API.h" />
+    <ClInclude Include="crypt_gost_28147-89_init.h" />
     <ClInclude Include="crypt_gost_types.h" />
     <ClInclude Include="diffy_helman.h" />
+    <ClInclude Include="hash_gost_init.h" />
+    <ClInclude Include="hash_gost_p_34_11_2012.h" />
     <ClInclude Include="inc_crypt_pp.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="crypt_gost_28147-89_API.c" />
     <ClCompile Include="diffy_helman.cpp" />
+    <ClCompile Include="hash_gost_p_34_11_2012.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

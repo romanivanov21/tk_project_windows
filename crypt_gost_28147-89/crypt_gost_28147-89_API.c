@@ -6,8 +6,259 @@
 * Год: 2014 - 2015 												   *
 *																   *
 ********************************************************************/
+//отключение warning на функцию fopen_s
+#pragma warning (disable: 4996) 
+
+#include "crypt_gost_28147-89_init.h"
 #include "crypt_gost_types.h"
 #include "crypt_gost_28147-89_API.h"
+#include <assert.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <io.h>
+
+void c_to_bin(byte *c, const size_t *size)
+{
+	size_t i = 0;
+	for(i = 0; i < *size; i++)
+	{
+		switch(c[i])
+		{
+		case '0':
+			c[i] = 0x0;
+			break;
+		case '1':
+			c[i] = 0x1;
+			break;
+		case '2':
+			c[i] = 0x2;
+			break;
+		case '3':
+			c[i] = 0x3;
+			break;
+		case '4':
+			c[i] = 0x4;
+			break;
+		case'5':
+			c[i] = 0x5;
+			break;
+		case'6':
+			c[i] = 0x6;
+			break;
+		case'7':
+			c[i] = 0x7;
+			break;
+		case'8':
+			c[i] = 0x8;
+			break;
+		case'9':
+			c[i] = 0x9;
+			break;
+		case'a':
+			c[i] = 0xA;
+			break;
+		case'b':
+			c[i] = 0xB;
+			break;
+		case'c':
+			c[i] = 0xC;
+			break;
+		case'd':
+			c[i] = 0xD;
+			break;
+		case'e':
+			c[i] = 0xE;
+			break;
+		case'f':
+			c[i]= 0xF;
+			break;
+		}
+	}
+}
+
+void data_to_k(byte *data)
+{
+	size_t i = 0;
+	memcpy(data, k8, key_size16);
+	for(i = (key_size16 + 2); i < key_size16 + 2 + key_size16; i++ )
+	{
+		k7[i] = data[i];
+	}
+	for(i = 36; i < 52; i++)
+	{
+		k6[i] = data[i];
+	}
+	for(i = 54; i < 70; i++)
+	{
+		k5[i] = data[i];
+	}
+	for(i = 72; i < 88; i++)
+	{
+		k4[i] = data[i];
+	}
+	for(i = 90; i < 106; i++)
+	{
+		k3[i] = data[i];
+	}
+	for(i = 108; i < 124; i++)
+	{
+		k2[i] = data[i];
+	}
+	for(i = 126; i < 142; i++)
+	{
+		k1[i] = data[i];
+	}
+}
+
+CRYPT_GOST_API word32 read_vector_init(const char *path, const size_t *size_path)
+{
+	size_t i = 0;
+	FILE *file;
+	byte *data;
+	size_t file_size = 0; 
+
+	if((path == NULL) || (*size_path == 0))
+	{
+		return PATCH_EMPTY;
+	}
+
+#if DEBUG_INFO_PRINT
+	printf("The path to the vector initialization:\n");
+	for(i = 0; i < *size_path; i++)
+	{
+		printf("%c",path[i]);
+	}
+	printf("\n");
+	printf("----------------------------------------------------------------------------\n");
+#endif
+	if((file = fopen(path, "rb")) != NULL)
+	{
+#if DEBUG_INFO_PRINT
+		printf("Open file: [OK] \n");
+#endif
+		file_size = _filelength(_fileno(file));
+#if DEBUG_INFO_PRINT
+		printf("File size: %d",file_size);
+		printf(" Byte \n");
+		printf("----------------------------------------------------------------------------\n");
+#endif
+		if(file_size != 0)
+		{
+			data = (byte*)malloc((file_size * sizeof(byte)));
+			memset(data,0,(file_size * sizeof(byte)));
+			fread(data, sizeof(byte), file_size/sizeof(byte), file);
+			fclose(file);
+#if DEBUG_INFO_PRINT
+			printf("Data: \n");
+#endif
+			c_to_bin(data,&file_size);
+#if DEBUG_INFO_PRINT
+			for(i = 0; i < 16; i++)
+			{
+				printf("%x",data[i]);
+			}
+			printf("\n");
+			for(i = 18; i < 34; i++)
+			{
+				printf("%x",data[i]);
+			}
+			printf("\n");
+			for(i = 36; i < 52; i++)
+			{
+				printf("%x",data[i]);
+			}
+			printf("\n");
+			for(i = 54; i < 70; i++)
+			{
+				printf("%x",data[i]);
+			}
+			printf("\n");
+			for(i = 72; i < 88; i++)
+			{
+				printf("%x",data[i]);
+			}
+			printf("\n");
+			for(i = 90; i < 106; i++)
+			{
+				printf("%x",data[i]);
+			}
+			printf("\n");
+			for(i = 108; i < 124; i++)
+			{
+				printf("%x",data[i]);
+			}
+			printf("\n");
+			for(i = 126; i < 142; i++)
+			{
+				printf("%x",data[i]);
+			}
+			printf("\n");
+			printf("----------------------------------------------------------------------------\n");
+#endif
+			data_to_k(data);
+			free(data);
+#if DEBUG_INFO_PRINT 
+			printf("Vector init:\n");
+			for(i = 0; i < key_size16; i++)
+			{
+				printf("%x", k8[i]);
+			}
+			printf("\n");
+			for(i = 0; i < key_size16; i++)
+			{
+				printf("%x", k7[i]);
+			}
+			printf("\n");
+			for(i = 0; i < key_size16; i++)
+			{
+				printf("%x", k6[i]);
+			}
+			printf("\n");
+			for(i = 0; i < key_size16; i++)
+			{
+				printf("%x", k5[i]);
+			}
+			printf("\n");
+			for(i = 0; i < key_size16; i++)
+			{
+				printf("%x", k4[i]);
+			}
+			printf("\n");
+			for(i = 0; i < key_size16; i++)
+			{
+				printf("%x", k3[i]);
+			}
+			printf("\n");
+			for(i = 0; i < key_size16; i++)
+			{
+				printf("%x", k2[i]);
+			}
+			printf("\n");
+			for(i = 0; i < key_size16; i++)
+			{
+				printf("%x", k1[i]);
+			}
+			printf("\n");
+#endif
+			return OK;
+		}
+		else
+		{
+#if DEBUG_INFO_PRINT
+			printf("File size is null [ERROR]");
+#endif
+			return FILE_SIZE_IS_NULL;
+		}
+	}
+	else
+	{
+#if DEBUG_INFO_PRINT
+		printf("File is not open [ERROR]");
+#endif
+		return ERROR_OPEN_FILE;
+	}
+}
 
 CRYPT_GOST_API void key_box_init()
 {

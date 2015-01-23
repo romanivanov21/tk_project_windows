@@ -16,8 +16,10 @@ typedef unsigned int word32;
 typedef unsigned long word32;
 #endif
 
+typedef unsigned int uint;
 typedef unsigned char byte;
 typedef unsigned short word16;
+typedef unsigned long long word64;
 
 enum 
 { 
