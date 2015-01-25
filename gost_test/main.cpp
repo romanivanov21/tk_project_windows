@@ -128,7 +128,7 @@ void gost_decrypt_data(byte *data, std::size_t size)
 */
 int main(int argc, char *argv[])
 {
-	const char *path = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\Debug\\ginit.bin";
+	const char *path = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\crypt_gost_28147-89\\ginit.bin";
 	const std::size_t s1 = strlen(path);
 	for(int i = 0; i < argc; i++)
 	{
