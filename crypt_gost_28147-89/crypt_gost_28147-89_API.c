@@ -165,12 +165,21 @@ CRYPT_GOST_API word32 read_vector_init(const char *path, const size_t *size_path
 #endif
 		if(file_size != 0)
 		{
+			size_t read_byte;
 			data = (byte*)malloc((file_size * sizeof(byte)));
 			memset(data,0,(file_size * sizeof(byte)));
-			fread(data, sizeof(byte), file_size/sizeof(byte), file);
+			read_byte = fread(data, sizeof(byte), file_size/sizeof(byte), file);
+			if(read_byte == 0)
+			{
+#if DEBUG_INFO_PRINT 
+				printf("File is empty [ERROR]");
+#endif
+				fclose(file);
+				return FILE_IS_EMPTY;
+			}
 			fclose(file);
 #if DEBUG_INFO_PRINT
-			printf("Data: \n");
+			printf("Data from the file: \n");
 #endif
 			c_to_bin(data,&file_size);
 
@@ -283,7 +292,7 @@ CRYPT_GOST_API word32 read_vector_init(const char *path, const size_t *size_path
 	}
 }
 
-CRYPT_GOST_API void key_box_init()
+CRYPT_GOST_API void key_box_init(void)
 {
 	unsigned int i;
 	for(i = 0; i < key_size256; i++)

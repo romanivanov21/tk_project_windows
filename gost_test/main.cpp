@@ -9,6 +9,7 @@
 #include "..\crypt_gost_28147-89\diffy_helman.h"
 #include "..\network_server_dll\network_server_dll.h"
 #include "..\shared_code\gost_include.h"
+#include "crypt_gost_test.h"
 
 #include <iostream>
 #include <ctime>
@@ -125,11 +126,18 @@ void gost_decrypt_data(byte *data, std::size_t size)
 	}
 }
 */
-int main(void)
+int main(int argc, char *argv[])
 {
 	const char *path = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\Debug\\ginit.bin";
 	const std::size_t s1 = strlen(path);
-	read_vector_init(path, &s1);
+	for(int i = 0; i < argc; i++)
+	{
+		std::cout<<"argc["<< i <<"]"<<argv[i]<<std::endl;
+	}
+	if((read_vector_init(path, &s1)) != 0)
+	{
+		return 0;
+	}
 	key_box_init();
 
 	diffy_helm *d = new diffy_helm();

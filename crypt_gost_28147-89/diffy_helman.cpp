@@ -12,7 +12,7 @@
 
 #include <iostream>
 
-DIFFY_HELMAN_API diffy_helm::diffy_helm()
+DIFFY_HELMAN_API diffy_helm::diffy_helm(void)
 {
 	dh_.AccessGroupParameters().GenerateRandomWithKeySize(rnd_,gost_key_size);
 	p_ = dh_.GetGroupParameters().GetModulus();
