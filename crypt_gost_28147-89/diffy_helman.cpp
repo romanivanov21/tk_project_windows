@@ -20,12 +20,24 @@ DIFFY_HELMAN_API diffy_helm::diffy_helm()
 	g_ = dh_.GetGroupParameters().GetGenerator();
 	dhA_.AccessGroupParameters().Initialize(p_,q_, g_);
 
-#if PRINT
+#if DEBUG_INFO_PRINT
 	std::size_t count = p_.ByteCount();
-	std::cout << "P (" << std::dec << count << "): " << std::hex << p_ << std::endl;
-
+	std::cout << "P (" << std::dec << count << "): " ;//<< std::hex << p_ << std::endl;
+	for(std::size_t i = 0; i < 32; i++)
+	{
+		printf("%x",p_.GetByte(i));
+	}
+	printf("\n");
 	count = q_.ByteCount();
-	std::cout << "Q (" << std::dec << count << "): " << std::hex << q_ << std::endl;
+	std::cout << "Q (" << std::dec << count << "): " ;//<< std::hex << q_ << std::endl;
+	for(int i = 0; i < 32; i++)
+	{
+		printf("%x",q_.GetByte(i));
+	}
+	printf("\n");
+	count = g_.ByteCount();
+	std::cout << "G (" << std::dec << count << "): " << std::dec << g_ << std::endl;
+
 	bool is_generateA_ = false;
 #endif
 
@@ -39,20 +51,26 @@ DIFFY_HELMAN_API diffy_helm::~diffy_helm()
 	}
 }
 
-DIFFY_HELMAN_API void diffy_helm::get_p(byte *p, const std::size_t &p_size)
+DIFFY_HELMAN_API void diffy_helm::get_p(byte *p, const std::size_t &p_size)const
 {
 	assert(p_size == p_.ByteCount());
 	memset(p, 0, p_size);
-	p_.Encode(p, p_size);
+	for(std::size_t i = 0; i < p_size; i++)
+	{
+		p[i] = p_.GetByte(i);
+	}
 
 }
 
-DIFFY_HELMAN_API void diffy_helm::get_q(byte *q, const std::size_t &q_size)
+DIFFY_HELMAN_API void diffy_helm::get_q(byte *q, const std::size_t &q_size)const
 {
 	assert(q_size == q_.ByteCount());
 	memset(q, 0, q_size);
 	std::size_t count = q_.ByteCount();
-	q_.Encode(q, q_size);
+	for(std::size_t i = 0; i < q_size; i++)
+	{
+		q[i] = q_.GetByte(i);
+	}
 }
 DIFFY_HELMAN_API void diffy_helm::get_g(byte &g)
 {
@@ -78,7 +96,7 @@ DIFFY_HELMAN_API void diffy_helm::generate_A(byte *A, const std::size_t &size_A)
 	CryptoPP::Integer temp;
 	temp.Decode(pub_A_->BytePtr(), pub_A_->SizeInBytes());
 
-#if PRINT
+#if DEBUG_INFO_PRINT
 	std::cout<<"A = ";
 #endif
 
@@ -86,7 +104,7 @@ DIFFY_HELMAN_API void diffy_helm::generate_A(byte *A, const std::size_t &size_A)
 	{
 		A[i] = temp.GetByte(i);
 
-#if PRINT
+#if DEBUG_INFO_PRINT
 		std::cout<<std::hex<<(int)A[i];
 #endif
 
@@ -96,7 +114,16 @@ DIFFY_HELMAN_API void diffy_helm::generate_A(byte *A, const std::size_t &size_A)
 DIFFY_HELMAN_API void diffy_helm::generate_K(byte *B, const std::size_t &size_B, byte *gost_K, const std::size_t &size_gost_K)
 {
 	CryptoPP::SecByteBlock key(dhA_.AgreedValueLength());
-	dhA_.Agree(key, *priv_A_, B);
+	CryptoPP::SecByteBlock pub_B(dhA_.AgreedValueLength());
+	
+	CryptoPP::Integer int_b;
+	for(std::size_t i = 0; i < size_B; i++)
+	{
+		int_b.SetByte(i, B[i]);
+	}
+	int_b.Encode(pub_B.BytePtr(), pub_B.SizeInBytes());
+
+	dhA_.Agree(key, *priv_A_, pub_B);
 
 	key_.Decode(key.BytePtr(), key.SizeInBytes());
 

@@ -13,7 +13,7 @@
 #define DIFFY_HELMAN_API __declspec(dllexport)
 
 
-#define PRINT 1
+#define DEBUG_INFO_PRINT 1
 
 #include "inc_crypt_pp.h"
 
@@ -25,8 +25,8 @@ public:
 	DIFFY_HELMAN_API explicit diffy_helm();
 	DIFFY_HELMAN_API ~diffy_helm();
 
-	DIFFY_HELMAN_API void get_p(byte *p, const std::size_t &p_size);
-	DIFFY_HELMAN_API void get_q(byte *q, const std::size_t &q_size);
+	DIFFY_HELMAN_API void get_p(byte *p, const std::size_t &p_size)const;
+	DIFFY_HELMAN_API void get_q(byte *q, const std::size_t &q_size)const;
 	DIFFY_HELMAN_API void get_g(byte &g);
 
 	DIFFY_HELMAN_API void generate_A(byte *A, const std::size_t &A_size);

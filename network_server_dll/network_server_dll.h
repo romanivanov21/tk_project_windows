@@ -9,10 +9,8 @@
 #ifndef _NETWORK_SERVER_DLL_H_
 #define _NETWORK_SERVER_DLL_H_
 
-#define NETWORK_SERVER_API extern __declspec(dllexport)
-/*#else
-#define NETWORK_SERVER_API extern __declspec(dllimport)
-*/
+#define NETWORK_SERVER_API __declspec(dllexport)
+
 /*********************************************************
 * define ServerNetworkDll version						 *
 **********************************************************/
@@ -38,17 +36,17 @@ namespace server_netw
 		* Параметры конструктора:						 *
 		* 1. Логический порт сервреа					 *
 		**************************************************/
-		explicit server(const std::uint32_t port);
+		NETWORK_SERVER_API explicit server(const std::uint32_t port);
 
 		/*************************************************
 		* Деструктор класса server						 *
 		**************************************************/
-		~server();
+		NETWORK_SERVER_API ~server();
 
 		/*************************************************
 		* Функция для начала работы сервреа				 *
 		**************************************************/
-		void start();
+		NETWORK_SERVER_API void start();
 
 		/*************************************************
 		*  Функция для передачи данных клиенту			 *
@@ -56,7 +54,7 @@ namespace server_netw
 		* 1. массив данных								 *
 		* 2. размер массива								 *
 		**************************************************/
-		void send_bytes(byte *data, std::size_t &size);
+		NETWORK_SERVER_API void send_bytes(byte *data, const std::size_t &size);
 
 		/*************************************************
 		* Функция для приёма данных отклиента			 *
@@ -65,21 +63,21 @@ namespace server_netw
 		* 2. размер массива								 *
 		* Возвращаемое значение: число принятых байтов	 *
 		**************************************************/
-		boost::int32_t read_bytes(byte *data, std::size_t &size);
+		NETWORK_SERVER_API boost::int32_t read_bytes(byte *data, const std::size_t &size);
 
 		/*************************************************
 		* Функция возвращает текущий логический порт	 *
 		* сервера										 *
 		* Возвращаемое значение: текущий логический порт *
 		**************************************************/
-		std::uint32_t current_port()const { return port_; }
+		NETWORK_SERVER_API std::uint32_t current_port()const { return port_; }
 
 		/*************************************************
 		* Функция возвращает дата время соединения 		 *
 		* клиента										 *
 		* Возвращаемое значение: строка дата и время	 *
 		**************************************************/
-		std::string client_connect_data_time() { return client_connect_time_; }
+		NETWORK_SERVER_API std::string client_connect_data_time() { return client_connect_time_; }
 	private:
 		void gost_crypt_data(byte *data, std::size_t &size, const word32 *key);
 		void gost_decrypt_data(byte *data, std::size_t &size, const word32 *key);

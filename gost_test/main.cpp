@@ -7,6 +7,7 @@
 ********************************************************************/
 
 #include "..\crypt_gost_28147-89\diffy_helman.h"
+#include "..\network_server_dll\network_server_dll.h"
 #include "..\shared_code\gost_include.h"
 
 #include <iostream>
@@ -126,63 +127,67 @@ void gost_decrypt_data(byte *data, std::size_t size)
 */
 int main(void)
 {
-	diffy_helm *dh = new diffy_helm();
-	/*byte p[32];
-	byte q[32];
-	byte g;
-	*/
-	byte A[32];
-	/*dh->get_p(p, (sizeof(byte) * 32));
-	dh->get_q(q, (sizeof(byte) * 32));
-	dh->get_g(g);
-	*/
-	std::size_t time_1 = clock();
-	dh->generate_A(A, 32);
-	delete dh;
-	
+	const char *path = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\Debug\\ginit.bin";
+	const std::size_t s1 = strlen(path);
+	read_vector_init(path, &s1);
 	key_box_init();
 
-	unsigned char hash[64];
-	unsigned int i = 0;
-	byte tests[6];
-	memcpy(tests, "Roman", sizeof(byte) * 5);
-	hash_512(tests, 5,hash);
-	for(i = 0; i < 64; i++)
-	{
-		printf("%x",hash[i]);
-	}
+	diffy_helm *d = new diffy_helm();
+	byte A[32];
+	byte p[32];
+	byte q[32];
+	byte g;
+	byte p_hash[32];
+	byte q_hash[32];
+
+	d->get_p(p, 32);
+	d->get_q(q, 32);
+	d->get_g(g);
+	d->generate_A(A, 32);
+
+	boost::uint32_t port = 8001;
+	server_netw::server *s = new server_netw::server(port);
+	s->start();
+
+	s->send_bytes(p, 32);
+	hash_256(p,32,p_hash);
 	printf("\n");
-	char k1[key_size16] = {0x0, 0x0,  0x0,  0x0,  0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
-	const std::size_t s1 = strlen("F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\Debug\\ginit.bin");
-	read_vector_init("F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\Debug\\ginit.bin",&s1);
-	/*for(std::size_t i = 0; i < 32; i++)
-	{
-		std::cout<<std::hex<<(int)p[i];
-	}
-	std::cout<<std::endl;
 	for(std::size_t i = 0; i < 32; i++)
 	{
-		std::cout<<std::hex<<(int)q[i];
+		printf("%x",p_hash[i]);
 	}
-	std::cout<<std::endl;
-	std::cout<<std::hex<<(int)g<<std::endl; */
+	printf("\n");
 
-/*	char data[15];
-	strcpy_s(data,"IvanovRoman021");
-	gost_crypt_data((byte*)data,9);
-	//init_gost(data);
-	for(int i = 0; i < 9; i++)
+	s->send_bytes(q, 32);
+	hash_256(q,32,q_hash);
+	printf("\n");
+	for(std::size_t i = 0; i < 32; i++)
 	{
-		std::cout<<data[i];
+		printf("%x",q_hash[i]);
 	}
-	std::cout<<std::endl;
-	gost_decrypt_data((byte*)data,9);
-	for(int i = 0; i < 9; i++)
+	printf("\n");
+
+	s->send_bytes(&g, 1);
+	s->send_bytes(A, 32);
+
+	byte B[32];
+	boost::int32_t byte_reciver_B = s->read_bytes(B, 32);
+
+	for(size_t i = 0; i < 32; i++)
 	{
-		std::cout<<data[i];
+		printf("%x",B[i]);
 	}
-	std::cout<<std::endl;
-	*/
+	printf("\n");
+
+	byte shared_secret[32];
+	d->generate_K(B, 32, shared_secret, 32);
+	for(size_t i = 0; i < 32; i++)
+	{
+		printf("%x", shared_secret[i]);
+	}
+	printf("\n");
+
+	delete d; delete s;
 	printf("\nAll tests passed.\n");
 	getchar();
 	return 0;

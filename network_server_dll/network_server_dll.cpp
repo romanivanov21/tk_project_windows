@@ -26,7 +26,7 @@
 
 namespace server_netw
 {
-	server::server(const std::uint32_t port) : 
+NETWORK_SERVER_API  server::server(const std::uint32_t port) : 
 		port_(port),
 		socket_(io_service_), 
 		socket_icmp_(io_service_),
@@ -35,7 +35,7 @@ namespace server_netw
 
 	}
 	
-	void server::start()
+NETWORK_SERVER_API	void server::start()
 	{
 		try
 		{
@@ -50,9 +50,9 @@ namespace server_netw
 		}
 	}
 
-	void server::send_bytes(byte *data, std::size_t &size)
+NETWORK_SERVER_API	void server::send_bytes(byte *data, const std::size_t &size)
 	{
-		word32 key[8];
+		/*word32 key[8];
 		key[0] = 5; 
 		key[1] = 4; 
 		key[2] = 3;
@@ -63,7 +63,7 @@ namespace server_netw
 		key[7] = 5;
 
 		gost_crypt_data(data,size,key);
-		
+		*/
 		try
 		{
 			socket_.write_some(boost::asio::buffer(data,size));
@@ -76,10 +76,10 @@ namespace server_netw
 		}
 	}
 	
-	boost::int32_t server::read_bytes(byte *data, std::size_t &size)
+NETWORK_SERVER_API	boost::int32_t server::read_bytes(byte *data, const std::size_t &size)
 	{
-		boost::int32_t bytes = -1;
-		word32 key[8];
+	  boost::int32_t bytes = -1;
+	  /*word32 key[8];
 		key[0] = 5;
 		key[1] = 4;
 		key[2] = 3;
@@ -88,11 +88,11 @@ namespace server_netw
 		key[5] = 0;
 		key[6] = 1;
 		key[7] = 5;
-		
+		*/
 		try
 		{
 			bytes = socket_.read_some(boost::asio::buffer(data, size));
-			gost_decrypt_data(data, size, key);
+			//gost_decrypt_data(data, size, key);
 		}
 		catch(...)
 		{
@@ -193,7 +193,7 @@ namespace server_netw
 			i_blocks++;
 		}
 	}
-	server::~server()
+NETWORK_SERVER_API	server::~server()
 	{
 		acceptor_.close();
 		socket_.close();

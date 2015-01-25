@@ -71,43 +71,63 @@ void c_to_bin(byte *c, const size_t *size)
 			c[i] = 0xE;
 			break;
 		case'f':
-			c[i]= 0xF;
+			c[i] = 0xF;
 			break;
 		}
 	}
 }
 
-void data_to_k(byte *data)
+void data_to_k(const byte *data)
 {
 	size_t i = 0;
-	memcpy(data, k8, key_size16);
-	for(i = (key_size16 + 2); i < key_size16 + 2 + key_size16; i++ )
+	size_t j = 0;
+
+	for(i = 0; i < 16; i++)
 	{
-		k7[i] = data[i];
+		k8[j] = data[i];
+		j++;
 	}
+	j = 0;
+	for(i = 18; i < 34; i++ )
+	{
+		k7[j] = data[i];
+		j++;
+	}
+	j = 0;
 	for(i = 36; i < 52; i++)
 	{
-		k6[i] = data[i];
+		k6[j] = data[i];
+		j++;
 	}
+	j = 0;
 	for(i = 54; i < 70; i++)
 	{
-		k5[i] = data[i];
+		k5[j] = data[i];
+		j++;
 	}
+	j = 0;
 	for(i = 72; i < 88; i++)
 	{
-		k4[i] = data[i];
+		k4[j] = data[i];
+		j++;
 	}
+	j = 0;
 	for(i = 90; i < 106; i++)
 	{
-		k3[i] = data[i];
+		k3[j] = data[i];
+		j++;
 	}
+	j = 0;
 	for(i = 108; i < 124; i++)
 	{
-		k2[i] = data[i];
+		k2[j] = data[i];
+		j++;
 	}
+	j = 0;
 	for(i = 126; i < 142; i++)
 	{
-		k1[i] = data[i];
+		k1[j] = data[i];
+		j++;
 	}
 }
 
@@ -141,7 +161,7 @@ CRYPT_GOST_API word32 read_vector_init(const char *path, const size_t *size_path
 #if DEBUG_INFO_PRINT
 		printf("File size: %d",file_size);
 		printf(" Byte \n");
-		printf("----------------------------------------------------------------------------\n");
+		printf("------------------------------------------------------------------------[OK]\n");
 #endif
 		if(file_size != 0)
 		{
@@ -153,6 +173,7 @@ CRYPT_GOST_API word32 read_vector_init(const char *path, const size_t *size_path
 			printf("Data: \n");
 #endif
 			c_to_bin(data,&file_size);
+
 #if DEBUG_INFO_PRINT
 			for(i = 0; i < 16; i++)
 			{
@@ -194,10 +215,10 @@ CRYPT_GOST_API word32 read_vector_init(const char *path, const size_t *size_path
 				printf("%x",data[i]);
 			}
 			printf("\n");
-			printf("----------------------------------------------------------------------------\n");
+			printf("------------------------------------------------------------------------[OK]\n");
 #endif
 			data_to_k(data);
-			free(data);
+			i = 0;
 #if DEBUG_INFO_PRINT 
 			printf("Vector init:\n");
 			for(i = 0; i < key_size16; i++)
@@ -240,6 +261,8 @@ CRYPT_GOST_API word32 read_vector_init(const char *path, const size_t *size_path
 				printf("%x", k1[i]);
 			}
 			printf("\n");
+			printf("------------------------------------------------------------------------[OK]\n");
+			free(data);
 #endif
 			return OK;
 		}
