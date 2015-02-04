@@ -18,7 +18,7 @@
 #include <string.h>
 #include <io.h>
 
-void c_to_bin(byte *c, const size_t *size)
+void bin_parser(byte *c, const size_t *size)
 {
 	size_t i = 0;
 	for(i = 0; i < *size; i++)
@@ -181,7 +181,7 @@ CRYPT_GOST_API word32 read_vector_init(const char *path, const size_t *size_path
 #if DEBUG_INFO_PRINT
 			printf("Data from the file: \n");
 #endif
-			c_to_bin(data,&file_size);
+			bin_parser(data,&file_size);
 
 #if DEBUG_INFO_PRINT
 			for(i = 0; i < 16; i++)

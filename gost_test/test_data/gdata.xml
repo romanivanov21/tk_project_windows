@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cryptgost>
+  <gkey name = "1" vaule="a4f12f98310c59073252a43527563455"></gkey>
+  <gkey name = "2" vaule="3252a43527563455"></gkey>
+  <gkey name = "3" vaule="2342380980234804"></gkey>
+  <gkey name = "4" vaule="4234929098234993"></gkey>
+  <gkey name = "5" vaule="2347923742989874"></gkey>
+   
+  <data name = "1" vaule="12345452"></data>
+  <data name = "2" vaule=""></data>
+  <data name = "3" vaule=""></data>
+  <data name = "4" vaule=""></data>
+  <data name = "5" vaule=""></data>
+
+  <crdata name = "1" vaule="54521234"></crdata>
+  <crdata name = "2" vaule=""></crdata>
+  <crdata name = "3" vaule=""></crdata>
+  <crdata name = "4" vaule=""></crdata>
+  <crdata name = "5" vaule=""></crdata>
+  
+</cryptgost>
