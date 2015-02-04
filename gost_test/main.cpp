@@ -128,9 +128,20 @@ void gost_decrypt_data(byte *data, std::size_t size)
 */
 int main(int argc, char *argv[])
 {
-	const char *path = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\crypt_gost_28147-89\\ginit.bin";
-	const std::size_t s1 = strlen(path);
-	for(int i = 0; i < argc; i++)
+	const std::string path = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\crypt_gost_28147-89\\ginit.bin";
+	const std::string path_data = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\gost_test\\test_data\\gdata.xml";
+	try
+	{
+		gost_test *g = new gost_test(path, path_data, 1);
+		g->test_start();
+
+		delete g;
+	}
+	catch(...)
+	{
+
+	}
+	/*for(int i = 0; i < argc; i++)
 	{
 		std::cout<<"argc["<< i <<"]"<<argv[i]<<std::endl;
 	}
@@ -195,7 +206,7 @@ int main(int argc, char *argv[])
 	}
 	printf("\n");
 
-	delete d; delete s;
+	delete d; delete s;*/
 	printf("\nAll tests passed.\n");
 	getchar();
 	return 0;
