@@ -2,12 +2,14 @@
 #include "..\crypt_gost_28147-89\crypt_gost_types.h"
 #include"..\shared_code\gost_include.h"
 #include"..\shared_code\gost_types_convert.h"
+#include"gost_test_exeption.h"
 #include"tinyxml.h"
 #include <io.h>
 #include <iostream>
 #include <assert.h>
 #include <string>
 #include <vector>
+#include <chrono>
 //отключение warning на функцию fopen_s
 #pragma warning (disable: 4996)
 static void bin_parser(std::string &vaule)
@@ -70,8 +72,13 @@ static void bin_parser(std::string &vaule)
 }
 gost_test::gost_test(const std::string &vinit_path, const std::string &test_data_path, const std::size_t &n_test) : 
 		vinit_path_(vinit_path), test_data_path_(test_data_path), n_test_(n_test)
-{ 
+{
+	assert(vinit_path.length() != 0);
+	assert(test_data_path.length() != 0);
+	assert(n_test != 0);
+#if CONSOLE_APPLICATION
 	std::cout<<"GOST 28147-89"<<std::endl;
+#endif
 	memset(gtype_.byte_decryption_data, 0, sizeof(byte) * SIZE_CRYPT_BUFF_BYTE);
 	memset(gtype_.byte_encryption_data, 0, sizeof(byte) * SIZE_CRYPT_BUFF_BYTE);
 	memset(gtype_.word_decryption_data, 0, sizeof(word32) * SIZE_CRYPT_BUFF_WORD);
@@ -85,13 +92,13 @@ std::string gost_test::test_data_read(const std::size_t &id_data)
 	if( !(gdata->LoadFile()))
 	{
 		delete gdata;
-		throw new std::string("The dataful file for testing didn't manage to be opened");
+		throw gost_exception("The dataful file for testing didn't manage to be opened");
 	}
 	TiXmlElement*pElem = gdata->FirstChildElement("cryptgost");
 	if (!pElem)
 	{
 		delete gdata;
-		throw new std::string("Error read data");
+		throw new gost_exception("Error read data");
 	}
 	std::string value = "";
 	for(const TiXmlElement *item = pElem->FirstChildElement("data"); item; item = item->NextSiblingElement("data"))
@@ -116,12 +123,12 @@ std::string gost_test::test_key_read(const std::size_t &id_key)
 	if(!(gkey->LoadFile()))
 	{
 		delete gkey;
-		throw new std::string("The dataful file for testing didn't manage to be opened");
+		throw new gost_exception("The dataful file for testing didn't manage to be opened");
 	}
 	TiXmlElement *pElem = gkey->FirstChildElement("cryptgost");
 	if(!pElem) {
 		delete gkey;
-		throw new std::string("Error read key");
+		throw new gost_exception("Error read key");
 	}
 
 	std::string value = "";
@@ -146,7 +153,7 @@ std::string gost_test::test_crypt_data_read(const std::size_t &id_cryprdata)
 	if(!(cryptdata->LoadFile()))
 	{
 		delete cryptdata;
-		throw new std::string("The dataful file for testing didn't manage to be opened");
+		throw new gost_exception("The dataful file for testing didn't manage to be opened");
 	}
 	TiXmlElement *pElem = cryptdata->FirstChildElement("cryptgost");
 	if(!pElem) {
@@ -168,7 +175,7 @@ std::string gost_test::test_crypt_data_read(const std::size_t &id_cryprdata)
 	delete cryptdata;
 	return value;
 }
-void gost_test::test_start(void)
+bool gost_test::testing(void)
 {
 	std::size_t size = 1;
 	if((n_test_ <= 5) && (n_test_ > 0))
@@ -179,23 +186,35 @@ void gost_test::test_start(void)
 	{
 		size = 5;
 	}
-	std::string data = test_data_read(1);
+	std::string data = "";
+	try
+	{
+		data = test_data_read(n_test_);
+	}
+	catch(gost_exception &ex)
+	{
+		throw gost_exception(ex.what());
+	}
 	if(data.length() != SIZE_CRYPT_BUFF_BYTE)
 	{
-		print_result("Format data form gdata.xml error");
-		return;
+		throw gost_exception("Format data form gdata.xml error");
 	}
 	for(std::size_t i = 0; i < SIZE_CRYPT_BUFF_BYTE; i++)
 	{
 		gtype_.byte_encryption_data[i] = data[i];
 	}
-
-	std::string key = test_key_read(1);
-
+	std::string key = "";
+	try
+	{
+		key = test_key_read(n_test_);
+	}
+	catch(gost_exception &ex)
+	{
+		throw gost_exception(ex.what());
+	}
 	if(key.length() != SIZE_CRYPT_KEY_BYTE)
 	{
-		print_result("Format gkey from hdata.xml error");
-		return;
+		throw gost_exception("Format gkey from hdata.xml error");
 	}
 
 	for(std::size_t i = 0; i < SIZE_CRYPT_KEY_BYTE; i++)
@@ -206,27 +225,79 @@ void gost_test::test_start(void)
 	std::string cryptdata = test_crypt_data_read(1);
 	if(cryptdata.length() != SIZE_CRYPT_BUFF_BYTE)
 	{
-		print_result("Format gkey from hdata.xml error");
-		return;
+		throw gost_exception("Format gkey from hdata.xml error");
 	}
-	if(crypt())
+	while(n_test_ != 0)
 	{
-		std::cout<<"OK crypt1"<<std::endl;
+		if(!(crypt(n_test_)))
+		{
+			return false;
+		}
+		n_test_--;
 	}
+#if CONSOLE_APPLICATION
+	print_result("OK");
+	print_result("----------------------------------------------------------------------");
+#endif
+	return true;
 }
-bool gost_test::crypt()
+bool gost_test::crypt(const std::size_t &n)
 {
+#if CONSOLE_APPLICATION 
+	print_result("encrypt data:");
+	print_result(gtype_.byte_encryption_data,SIZE_CRYPT_BUFF_BYTE);
+	print_result("----------------------------------------------------------------------");
+	print_result("key:");
+	print_result(gtype_.byte_key,SIZE_CRYPT_KEY_BYTE);
+	print_result("----------------------------------------------------------------------");
+#endif
 	byte_to_word32_key(gtype_.byte_key,gtype_.word_key);
 	byte_to_word32_data(gtype_.byte_encryption_data, gtype_.word_encryption_data);
+	auto now = std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now());
 	gostcrypt(gtype_.word_encryption_data,gtype_.word_decryption_data,gtype_.word_key);
+	std::cout << (std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()) - now).count() << std::endl;
 	word32_to_byte_data(gtype_.word_decryption_data,gtype_.byte_decryption_data);
+#if CONSOLE_APPLICATION
+	print_result("decrypt data:");
 	print_result(gtype_.byte_decryption_data,SIZE_CRYPT_BUFF_BYTE);
+	print_result("----------------------------------------------------------------------");
+#endif
 	std::string temp = "";
-	temp = test_crypt_data_read(1);
+	try
+	{
+		temp = test_crypt_data_read(n);
+	}
+	catch(gost_exception &ex)
+	{
+		throw gost_exception(ex.what());
+	}
 	for(std::size_t i = 0; i < temp.length(); i++)
 	{
 		if(temp[i] != gtype_.byte_decryption_data[i]) {
 			
+			return false;
+		}
+	} byte_to_word32_data(gtype_.byte_decryption_data,gtype_.word_decryption_data);
+	gostdecrypt(gtype_.word_decryption_data,gtype_.word_encryption_data, gtype_.word_key);
+	word32_to_byte_data(gtype_.word_encryption_data,gtype_.byte_encryption_data);
+#if CONSOLE_APPLICATION
+	print_result("decrypt data:");
+	print_result(gtype_.byte_encryption_data,SIZE_CRYPT_BUFF_BYTE);
+	print_result("----------------------------------------------------------------------");
+#endif
+	std::string data = "";
+	try
+	{
+		data = test_data_read(n);
+	}
+	catch(gost_exception &ex)
+	{
+		throw gost_exception(ex.what());
+	}
+	for(std::size_t i = 0; i < SIZE_CRYPT_BUFF_BYTE; i++)
+	{
+		if(data[i] != gtype_.byte_encryption_data[i])
+		{
 			return false;
 		}
 	}
@@ -235,11 +306,13 @@ bool gost_test::crypt()
 
 void gost_test::print_result(const std::string &msg)const
 {
+	assert(msg.length() != 0);
 	std::cout<<msg<<std::endl;
 }
 
 void gost_test::print_result(const byte* msg, const std::size_t &length)const
 {
+	assert(length != 0);
 	for(std::size_t i = 0; i < length; i++)
 	{
 		printf("%x",msg[i]);
@@ -249,6 +322,7 @@ void gost_test::print_result(const byte* msg, const std::size_t &length)const
 
 void gost_test::print_result(const word32 *msg, const std::size_t &length)const
 {
+	assert(length != 0);
 	for(std::size_t i = 0; i < length; i++)
 	{
 		printf("%x",msg[i]);

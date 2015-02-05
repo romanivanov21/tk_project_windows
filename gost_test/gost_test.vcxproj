@@ -88,6 +88,7 @@
   <ItemGroup>
     <ClInclude Include="crypt_gost_test.h" />
     <ClInclude Include="gost_API_test.h" />
+    <ClInclude Include="gost_test_exeption.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -9,6 +9,7 @@
 #include "..\crypt_gost_28147-89\diffy_helman.h"
 #include "..\network_server_dll\network_server_dll.h"
 #include "..\shared_code\gost_include.h"
+#include "gost_test_exeption.h"
 #include "crypt_gost_test.h"
 
 #include <iostream>
@@ -133,13 +134,16 @@ int main(int argc, char *argv[])
 	try
 	{
 		gost_test *g = new gost_test(path, path_data, 1);
-		g->test_start();
+		if(!(g->testing()))
+		{
+			std::cout<<"ERROR"<<std::endl;
+		}
 
 		delete g;
 	}
-	catch(...)
+	catch(gost_exception &ex)
 	{
-
+		std::cout<<ex.what()<<std::endl;
 	}
 	/*for(int i = 0; i < argc; i++)
 	{
