@@ -33,7 +33,12 @@ static void bin_parser(std::string &vaule);
 class test : private boost::noncopyable
 {
 public:
-	explicit test(void) { std::cout<<"Tested the algoritm "; };
+	explicit test(void) 
+	{
+#if CONSOLE_APPLICATION
+		std::cout<<"Tested the algoritm "; 
+#endif
+	};
 	virtual bool testing(void) = 0;
 	virtual void print_result(const std::string &msg)const = 0;
 	virtual void print_result(const byte* msg, const std::size_t &length)const = 0;

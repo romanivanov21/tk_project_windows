@@ -229,38 +229,49 @@ bool gost_test::testing(void)
 	}
 	while(n_test_ != 0)
 	{
-		if(!(crypt(n_test_)))
+		try
 		{
-			return false;
+			if(!(crypt(n_test_)))
+			{
+				return false;
+			}
+			n_test_--;
 		}
-		n_test_--;
+		catch(gost_exception &ex)
+		{
+			throw gost_exception(ex.what());
+		}
 	}
 #if CONSOLE_APPLICATION
 	print_result("OK");
-	print_result("----------------------------------------------------------------------");
+	print_result("----------------------------------------------------------------------------");
 #endif
 	return true;
 }
 bool gost_test::crypt(const std::size_t &n)
 {
+	const std::size_t length = vinit_path_.length();
+	if(read_vector_init(vinit_path_.c_str(),&length))
+	{
+		throw gost_exception("Vector init for GOST 28147-89 error");
+	}
 #if CONSOLE_APPLICATION 
-	print_result("encrypt data:");
+	print_result("source data:");
 	print_result(gtype_.byte_encryption_data,SIZE_CRYPT_BUFF_BYTE);
-	print_result("----------------------------------------------------------------------");
+	print_result("------------------------------------------------------------------------[OK]");
 	print_result("key:");
 	print_result(gtype_.byte_key,SIZE_CRYPT_KEY_BYTE);
-	print_result("----------------------------------------------------------------------");
+	print_result("------------------------------------------------------------------------[OK]");
 #endif
 	byte_to_word32_key(gtype_.byte_key,gtype_.word_key);
 	byte_to_word32_data(gtype_.byte_encryption_data, gtype_.word_encryption_data);
-	auto now = std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now());
+
 	gostcrypt(gtype_.word_encryption_data,gtype_.word_decryption_data,gtype_.word_key);
-	std::cout << (std::chrono::time_point_cast<std::chrono::microseconds>(std::chrono::system_clock::now()) - now).count() << std::endl;
 	word32_to_byte_data(gtype_.word_decryption_data,gtype_.byte_decryption_data);
 #if CONSOLE_APPLICATION
-	print_result("decrypt data:");
+	print_result("encrypted data:");
 	print_result(gtype_.byte_decryption_data,SIZE_CRYPT_BUFF_BYTE);
-	print_result("----------------------------------------------------------------------");
+	print_result("------------------------------------------------------------------------[OK]");
 #endif
 	std::string temp = "";
 	try
@@ -281,9 +292,9 @@ bool gost_test::crypt(const std::size_t &n)
 	gostdecrypt(gtype_.word_decryption_data,gtype_.word_encryption_data, gtype_.word_key);
 	word32_to_byte_data(gtype_.word_encryption_data,gtype_.byte_encryption_data);
 #if CONSOLE_APPLICATION
-	print_result("decrypt data:");
+	print_result("decrypted data:");
 	print_result(gtype_.byte_encryption_data,SIZE_CRYPT_BUFF_BYTE);
-	print_result("----------------------------------------------------------------------");
+	print_result("------------------------------------------------------------------------[OK]");
 #endif
 	std::string data = "";
 	try
