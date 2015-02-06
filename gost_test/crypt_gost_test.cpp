@@ -315,13 +315,13 @@ bool gost_test::crypt(const std::size_t &n)
 	return true;
 }
 
-void gost_test::print_result(const std::string &msg)const
+void test::print_result(const std::string &msg)const
 {
 	assert(msg.length() != 0);
 	std::cout<<msg<<std::endl;
 }
 
-void gost_test::print_result(const byte* msg, const std::size_t &length)const
+void test::print_result(const byte* msg, const std::size_t &length)const
 {
 	assert(length != 0);
 	for(std::size_t i = 0; i < length; i++)
@@ -331,7 +331,7 @@ void gost_test::print_result(const byte* msg, const std::size_t &length)const
 	printf("\n");
 }
 
-void gost_test::print_result(const word32 *msg, const std::size_t &length)const
+void test::print_result(const word32 *msg, const std::size_t &length)const
 {
 	assert(length != 0);
 	for(std::size_t i = 0; i < length; i++)

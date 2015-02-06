@@ -90,6 +90,11 @@
     <ClInclude Include="gost_API_test.h" />
     <ClInclude Include="gost_test_exeption.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="test_data\dhdata.xml" />
+    <Xml Include="test_data\gdata.xml" />
+    <Xml Include="test_data\hdata.xml" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -33,4 +33,15 @@
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Xml Include="test_data\dhdata.xml">
+      <Filter>Файлы ресурсов</Filter>
+    </Xml>
+    <Xml Include="test_data\gdata.xml">
+      <Filter>Файлы ресурсов</Filter>
+    </Xml>
+    <Xml Include="test_data\hdata.xml">
+      <Filter>Файлы ресурсов</Filter>
+    </Xml>
+  </ItemGroup>
 </Project>

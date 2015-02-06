@@ -40,9 +40,9 @@ public:
 #endif
 	};
 	virtual bool testing(void) = 0;
-	virtual void print_result(const std::string &msg)const = 0;
-	virtual void print_result(const byte* msg, const std::size_t &length)const = 0;
-	virtual void print_result(const word32 *msg, const std::size_t &length)const = 0;
+	void print_result(const std::string &msg)const;
+	void print_result(const byte* msg, const std::size_t &length)const;
+	void print_result(const word32 *msg, const std::size_t &length)const;
 };
 class gost_test : public test
 {
@@ -54,9 +54,6 @@ private:
 	std::string test_key_read(const std::size_t &id_key);
 	std::string test_crypt_data_read(const std::size_t &id_cryptdata);
 	bool crypt(const std::size_t &n);
-	void print_result(const std::string &msg)const;
-	void print_result(const byte* msg, const std::size_t &length)const;
-	void print_result(const word32 *msg, const std::size_t &length)const;
 private:
 	const std::string vinit_path_;
 	const std::string test_data_path_;
@@ -69,9 +66,6 @@ public:
 	explicit dh_test(const std::string &test_data_path, const std::size_t &n_test);
 	~dh_test();
 	bool testing(void);
-	void print_result(const std::string &msg)const;
-	virtual void print_result(const byte* msg, const std::size_t &length)const;
-	virtual void print_result(const word32 *msg, const std::size_t &length)const;
 private:
 	void test_data_read(std::vector<byte> *data);
 private:
@@ -82,11 +76,7 @@ class hash_test : public test
 {
 public:
 	explicit hash_test(void);
-	~hash_test();
 	bool testing(void);
-	void print_result(const std::string &msg)const;
-	virtual void print_result(const byte* msg, const std::size_t &length)const;
-	virtual void print_result(const word32 *msg, const std::size_t &length)const;
 private:
 	void test_data_read(std::vector<byte> *data);
 private:
