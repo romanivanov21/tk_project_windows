@@ -131,21 +131,21 @@ void data_to_k(const byte *data)
 	}
 }
 
-CRYPT_GOST_API word32 read_vector_init(const char *path, const size_t *size_path)
+CRYPT_GOST_API word32 read_vector_init(const char *path, const size_t *length)
 {
 	size_t i = 0;
 	FILE *file;
 	byte *data;
 	size_t file_size = 0; 
-
-	if((path == NULL) || (*size_path == 0))
+	assert(*length != 0);
+	if((path == NULL) || (*length == 0))
 	{
 		return PATCH_EMPTY;
 	}
 
 #if DEBUG_INFO_PRINT
 	printf("The path to the vector initialization:\n");
-	for(i = 0; i < *size_path; i++)
+	for(i = 0; i < *length; i++)
 	{
 		printf("%c",path[i]);
 	}
