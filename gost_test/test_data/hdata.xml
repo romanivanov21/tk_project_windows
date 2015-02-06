@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <crypthash>
-  <data256></data256>
-  <data512></data512>
+  <data256 name = "1" vaule=""></data256>
+  <data256 name = "2" vaule=""></data256>
+  <data256 name = "3" vaule=""></data256>
+  <data256 name = "4" vaule=""></data256>
+  <data256 name = "5" vaule=""></data256>
+
+  <data512 name = "1" vaule=""></data512>
+  <data512 name = "2" vaule=""></data512>
+  <data512 name = "3" vaule=""></data512>
+  <data512 name = "4" vaule=""></data512>
+  <data512 name = "5" vaule=""></data512>
+
+  <hash256 name = "1" vaule=""></hash256>
+  <hash256 name = "2" vaule=""></hash256>
+  <hash256 name = "3" vaule=""></hash256>
+  <hash256 name = "4" vaule=""></hash256>
+  <hash256 name = "5" vaule=""></hash256>
+
+  <hash512 name = "1" vaule=""></hash512>
+  <hash512 name = "2" vaule=""></hash512>
+  <hash512 name = "3" vaule=""></hash512>
+  <hash512 name = "4" vaule=""></hash512>
+  <hash512 name = "5" vaule=""></hash512>
+  
 </crypthash>
