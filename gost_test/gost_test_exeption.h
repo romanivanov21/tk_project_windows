@@ -4,10 +4,7 @@
 class gost_exception : std::exception
 {
 public:
-	explicit gost_exception(const std::string &msg)
-	{
-		msg_ = msg;
-	}
+	explicit gost_exception(const std::string &msg) : msg_(msg) { }
 	std::string what(){ return msg_; }
 private:
 	std::string msg_;

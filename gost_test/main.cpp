@@ -138,7 +138,11 @@ int main(int argc, char *argv[])
 		{
 			std::cout<<"ERROR"<<std::endl;
 		}
-
+		hash_test *h = new hash_test("F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\gost_test\\test_data\\hdata.xml",1);
+		if(!(h->testing()))
+		{
+			std::cout<<"ERROR HASH"<<std::endl;
+		}
 		delete g;
 	}
 	catch(gost_exception &ex)

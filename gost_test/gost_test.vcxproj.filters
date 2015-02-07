@@ -23,13 +23,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gost_API_test.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="crypt_gost_test.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="gost_test_exeption.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="hex_parser.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>

@@ -10,6 +10,10 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <algorithm>
+#include <sstream>
+#include <iterator>
+#include <iomanip>
 //отключение warning на функцию fopen_s
 #pragma warning (disable: 4996)
 static void bin_parser(std::string &vaule)
@@ -70,6 +74,41 @@ static void bin_parser(std::string &vaule)
 		}
 	}
 }
+static std::string to_hex(const byte *byte_data, const std::size_t &length)
+{
+	assert((byte_data != 0) || (length != 0));
+	std::vector<byte> v(&byte_data[0], &byte_data[length - 1]);
+	std::ostringstream result;
+	result << std::setw(2) << std::setfill('0') << std::hex << std::uppercase;
+	std::copy(v.begin(), v.end(), std::ostream_iterator<unsigned int>(result, ""));
+	return result.str();
+}
+void test::print_result(const std::string &msg)const
+{
+	assert(msg.length() != 0);
+	std::cout<<msg<<std::endl;
+}
+
+void test::print_result(const byte* msg, const std::size_t &length)const
+{
+	assert(length != 0);
+	for(std::size_t i = 0; i < length; i++)
+	{
+		printf("%x",msg[i]);
+	}
+	printf("\n");
+}
+
+void test::print_result(const word32 *msg, const std::size_t &length)const
+{
+	assert(length != 0);
+	for(std::size_t i = 0; i < length; i++)
+	{
+		printf("%x",msg[i]);
+	}
+	printf("\n");
+}
+
 gost_test::gost_test(const std::string &vinit_path, const std::string &test_data_path, const std::size_t &n_test) : 
 		vinit_path_(vinit_path), test_data_path_(test_data_path), n_test_(n_test)
 {
@@ -177,15 +216,7 @@ std::string gost_test::test_crypt_data_read(const std::size_t &id_cryprdata)
 }
 bool gost_test::testing(void)
 {
-	std::size_t size = 1;
-	if((n_test_ <= 5) && (n_test_ > 0))
-	{
-		size = n_test_;
-	}
-	else
-	{
-		size = 5;
-	}
+	assert((n_test_ > 0) || (n_test_ <= 5));
 	std::string data = "";
 	try
 	{
@@ -315,28 +346,262 @@ bool gost_test::crypt(const std::size_t &n)
 	return true;
 }
 
-void test::print_result(const std::string &msg)const
+hash_test::hash_test(const std::string &ghash_path, const std::size_t &n_test)
 {
-	assert(msg.length() != 0);
-	std::cout<<msg<<std::endl;
+	assert(ghash_path.length() != 0);
+	assert(n_test != 0);
+	
+	ghash_path_ = ghash_path;
+	n_test_ = n_test;
+#if CONSOLE_APPLICATION
+	print_result("HASH_GOST_P_34_11_2012");
+#endif
+	memset(ghash_.data256, 0, sizeof(byte) * SIZE_HASH256_BYTE);
+	memset(ghash_.data512, 0, sizeof(byte) * SIZE_HASH512_BYTE);
+	memset(ghash_.hash256, 0, sizeof(byte) * SIZE_HASH256_BYTE);
+	memset(ghash_.hash512, 0, sizeof(byte) * SIZE_HASH512_BYTE);
+}
+std::string hash_test::test_data256_read(const std::size_t &id_data)
+{
+	assert(id_data != 0);
+	TiXmlDocument *gdata = new TiXmlDocument(ghash_path_.c_str());
+	if( !(gdata->LoadFile()))
+	{
+		delete gdata;
+		throw gost_exception("The dataful file for testing didn't manage to be opened");
+	}
+	TiXmlElement*pElem = gdata->FirstChildElement("crypthash");
+	if (!pElem)
+	{
+		delete gdata;
+		throw gost_exception("Error read data256 form crypthash");
+	}
+	std::string value = "";
+	for(const TiXmlElement *item = pElem->FirstChildElement("data256"); item; item = item->NextSiblingElement("data256"))
+	{
+		std::string temp = "";
+		std::string id_size_t = std::to_string(id_data);
+		temp = item->Attribute("name");
+		if(temp == id_size_t)
+		{
+			value = (item->Attribute("vaule")); bin_parser(value);
+		}
+	}
+	delete gdata;
+	return value;
+}
+std::string hash_test::test_data512_read(const std::size_t &id_data)
+{
+	assert(id_data != 0);
+	TiXmlDocument *gdata = new TiXmlDocument(ghash_path_.c_str());
+	if( !(gdata->LoadFile()))
+	{
+		delete gdata;
+		throw gost_exception("The dataful file for testing didn't manage to be opened");
+	}
+	TiXmlElement*pElem = gdata->FirstChildElement("crypthash");
+	if (!pElem)
+	{
+		delete gdata;
+		throw gost_exception("Error read data512 form crypthash");
+	}
+	std::string value = "";
+	for(const TiXmlElement *item = pElem->FirstChildElement("data512"); item; item = item->NextSiblingElement("data512"))
+	{
+		std::string temp = "";
+		std::string id_size_t = std::to_string(id_data);
+		temp = item->Attribute("name");
+		if(temp == id_size_t)
+		{
+			value = (item->Attribute("vaule")); bin_parser(value);
+		}
+	}
+	delete gdata;
+	return value;
+}
+std::string hash_test::test_hash512_read(const std::size_t &id_hash)
+{
+	assert(id_hash != 0);
+	TiXmlDocument *gdata = new TiXmlDocument(ghash_path_.c_str());
+	if( !(gdata->LoadFile()))
+	{
+		delete gdata;
+		throw gost_exception("The dataful file for testing didn't manage to be opened");
+	}
+	TiXmlElement*pElem = gdata->FirstChildElement("crypthash");
+	if (!pElem)
+	{
+		delete gdata;
+		throw gost_exception("Error read hash512 form crypthash");
+	}
+	std::string value = "";
+	for(const TiXmlElement *item = pElem->FirstChildElement("hash512"); item; item = item->NextSiblingElement("hash512"))
+	{
+		std::string temp = "";
+		std::string id_size_t = std::to_string(id_hash);
+		temp = item->Attribute("name");
+		if(temp == id_size_t)
+		{
+			value = (item->Attribute("vaule"));
+		}
+	}
+	delete gdata;
+	return value;
+}
+std::string hash_test::test_hash256_read(const std::size_t &id_hash)
+{
+	assert((id_hash > 0) || (id_hash <= 5));
+	TiXmlDocument *gdata = new TiXmlDocument(ghash_path_.c_str());
+	if( !(gdata->LoadFile()))
+	{
+		delete gdata;
+		throw gost_exception("The dataful file for testing didn't manage to be opened");
+	}
+	TiXmlElement*pElem = gdata->FirstChildElement("crypthash");
+	if (!pElem)
+	{
+		delete gdata;
+		throw gost_exception("Error read hash256 form crypthash");
+	}
+	std::string value = "";
+	for(const TiXmlElement *item = pElem->FirstChildElement("hash256"); item; item = item->NextSiblingElement("hash256"))
+	{
+		std::string temp = "";
+		std::string id_size_t = std::to_string(id_hash);
+		temp = item->Attribute("name");
+		if(temp == id_size_t)
+		{
+			value = (item->Attribute("vaule"));
+		}
+	}
+	delete gdata;
+	return value;
 }
 
-void test::print_result(const byte* msg, const std::size_t &length)const
+bool hash_test::testing()
 {
-	assert(length != 0);
-	for(std::size_t i = 0; i < length; i++)
+	assert((n_test_ > 0) || (n_test_ <= 5));
+	while (n_test_ != 0)
 	{
-		printf("%x",msg[i]);
+		if(!(hashcmp256(n_test_)) || !(hashcmp512(n_test_)))
+		{
+			return false;
+		}
+		n_test_--;
 	}
-	printf("\n");
+	return true;
+}
+bool hash_test::hashcmp256(const std::size_t &n)
+{
+	assert(n != 0);
+	try 
+	{
+		std::string temp = "";
+		temp = test_data256_read(n);
+		bin_parser(temp);
+		if(temp.length() != SIZE_HASH256_BYTE)
+		{
+			throw gost_exception("Format data256 form ghash.xml error");
+		}
+		for(std::size_t i = 0; i < temp.length(); i++)
+		{
+			ghash_.data256[i] = temp[i];
+		}
+	}
+	catch(gost_exception &ex)
+	{
+		throw gost_exception (ex.what());
+	}
+#if CONSOLE_APPLICATION 
+	print_result("source data for hash256 (string): ");
+	print_result(ghash_.data256, SIZE_HASH256_BYTE);
+	print_result("------------------------------------------------------------------------[OK]");
+#endif
+
+	hash_256(ghash_.data256, SIZE_HASH256_BYTE, ghash_.hash256);
+	std::string str = to_hex(ghash_.hash256, SIZE_HASH256_BYTE + 1);
+#if CONSOLE_APPLICATION 
+	print_result("hash256(HEX): ");
+	print_result(str);
+	print_result("------------------------------------------------------------------------[OK]");
+#endif
+	try
+	{
+		std::string temp = "";
+		temp = test_hash256_read(n);
+		if(temp.length() == 0)
+		{
+			throw gost_exception("Format hash256 form ghash.xml error");
+		}
+		for(std::size_t i = 0; i < str.length(); i++)
+		{
+			if(temp[i] != str[i])
+			{
+				return false;
+			}
+		}
+	}
+	catch(gost_exception &ex)
+	{
+		throw gost_exception(ex.what());
+	}
+	return true;
 }
 
-void test::print_result(const word32 *msg, const std::size_t &length)const
+bool hash_test::hashcmp512(const std::size_t &n)
 {
-	assert(length != 0);
-	for(std::size_t i = 0; i < length; i++)
+	assert(n != 0);
+	try 
 	{
-		printf("%x",msg[i]);
+		std::string temp = "";
+		temp = test_data512_read(n);
+		if(temp.length() != SIZE_HASH512_BYTE)
+		{
+			throw gost_exception("Format data512 form ghash.xml error");
+		}
+		for(std::size_t i = 0; i < SIZE_HASH512_BYTE; i++)
+		{
+			ghash_.data512[i] = temp[i];
+		}
 	}
-	printf("\n");
+	catch(gost_exception &ex)
+	{
+		throw gost_exception (ex.what());
+	}
+#if CONSOLE_APPLICATION 
+	print_result("source data for hash512: ");
+	print_result(ghash_.data512, SIZE_HASH512_BYTE);
+	print_result("------------------------------------------------------------------------[OK]");
+#endif
+
+	hash_512(ghash_.data512, SIZE_HASH512_BYTE, ghash_.hash512);
+
+	std::string str = to_hex(ghash_.hash512, SIZE_HASH512_BYTE + 1);
+
+#if CONSOLE_APPLICATION 
+	print_result("hash512(HEX): ");
+	print_result(str);
+	print_result("------------------------------------------------------------------------[OK]");
+#endif
+	try
+	{
+		std::string temp = "";
+		temp = test_hash512_read(n);
+		if(temp.length() == 0)
+		{
+			throw gost_exception("Format hash512 form ghash.xml error");
+		}
+		for(std::size_t i = 0 ; i < temp.length(); i++)
+		{
+			if(temp[i] != str[i])
+			{
+				return false;
+			}
+		}
+	}
+	catch(gost_exception &ex)
+	{
+		throw gost_exception(ex.what());
+	}
+	return true;
 }

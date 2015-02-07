@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <crypthash>
-  <data256 name = "1" vaule=""></data256>
-  <data256 name = "2" vaule=""></data256>
-  <data256 name = "3" vaule=""></data256>
-  <data256 name = "4" vaule=""></data256>
-  <data256 name = "5" vaule=""></data256>
+  <data256 name = "1" vaule="a4f12f98310c59073252a43527563455"></data256>
+  <data256 name = "2" vaule="a4f12f98310c59073252a43527563455"></data256>
+  <data256 name = "3" vaule="a4f12f98310c59073252a43527563455"></data256>
+  <data256 name = "4" vaule="a4f12f98310c59073252a43527563455"></data256>
+  <data256 name = "5" vaule="a4f12f98310c59073252a43527563455"></data256>
 
-  <data512 name = "1" vaule=""></data512>
+  <data512 name = "1" vaule="a4f12f98310c59073252a43527563455a4f12f98310c59073252a43527563455"></data512>
   <data512 name = "2" vaule=""></data512>
   <data512 name = "3" vaule=""></data512>
   <data512 name = "4" vaule=""></data512>
   <data512 name = "5" vaule=""></data512>
 
-  <hash256 name = "1" vaule=""></hash256>
+  <hash256 name = "1" vaule="0A2674751B0D3B866A9D7D4AFC15348E77DB1122B54784C681BA3E6556CD0"></hash256>
   <hash256 name = "2" vaule=""></hash256>
   <hash256 name = "3" vaule=""></hash256>
   <hash256 name = "4" vaule=""></hash256>
   <hash256 name = "5" vaule=""></hash256>
 
-  <hash512 name = "1" vaule=""></hash512>
+  <hash512 name = "1" vaule="7E5B1639ACC7CFFB11A6F216884486A9F8E6B7F04B89F642FADE46E3C2315612ED194DDE9CE9467EAAA3F44FA8D89E89CC354136CDD37496C5ACC877B2D"></hash512>
   <hash512 name = "2" vaule=""></hash512>
   <hash512 name = "3" vaule=""></hash512>
   <hash512 name = "4" vaule=""></hash512>
