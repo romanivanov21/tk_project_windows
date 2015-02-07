@@ -15,6 +15,7 @@
 #include <memory.h>
 #include <stdlib.h>
 #include <math.h>
+#include <assert.h>
 
 void add_module_512(const byte *a, const byte *b, byte *c)
 {
@@ -189,6 +190,7 @@ void hash_X(byte *IV, const byte *message, word64 length, byte *out)
 
 void hash_512(const byte *message, word64 length, byte *out)
 {
+	assert(out != 0);
 	byte IV[64] =
 	{
 			0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -202,6 +204,7 @@ void hash_512(const byte *message, word64 length, byte *out)
 
 void hash_256(const byte *message, word64 length,byte *out)
 {
+	assert(out != 0);
 	byte IV[64] =
 	{
 			0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,
