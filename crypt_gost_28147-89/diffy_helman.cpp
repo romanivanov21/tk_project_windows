@@ -87,7 +87,6 @@ DIFFY_HELMAN_API void diffy_helm::get_q(byte *q, const std::size_t &q_size)const
 }
 DIFFY_HELMAN_API void diffy_helm::get_g(byte &g)
 {
-	assert(g != 0);
 	for(std::size_t i = 0; i < g_.ByteCount(); i++)
 	{
 		g = g_.GetByte(i);
