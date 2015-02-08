@@ -2,6 +2,7 @@
 #define _TEST_CRYPT_H_
 
 #include"..\crypt_gost_28147-89\crypt_gost_types.h"
+#include"..\crypt_gost_28147-89\diffy_helman.h"
 #include <boost\noncopyable.hpp>
 #include <vector>
 #include <string>
@@ -15,6 +16,8 @@
 
 #define SIZE_HASH256_BYTE 32
 #define SIZE_HASH512_BYTE 64
+
+#define SIZE_DH_BUFF_BYTE 32
 
 #define CONSOLE_APPLICATION 1
 
@@ -44,7 +47,24 @@ typedef struct
 } GOST_TYPE, *PTR_GOST_TYPE;
 #pragma pack(pop)
 
-static void bin_parser(std::string &vaule);
+#pragma pack(push,1)
+typedef struct
+{
+	byte p_byte[SIZE_DH_BUFF_BYTE];
+	byte q_byte[SIZE_DH_BUFF_BYTE];
+	byte g_byte;
+
+	byte keyA[SIZE_DH_BUFF_BYTE];
+
+	byte keyB[SIZE_DH_BUFF_BYTE];
+
+	byte gkey[SIZE_DH_BUFF_BYTE];
+
+}DH_TYPE, *PTR_DH_TYPE;
+#pragma pack(pop)
+
+void bin_parser(std::string &vaule);
+std::string to_hex(const byte *byte_data, const std::size_t &length);
 
 class test : private boost::noncopyable
 {
@@ -83,10 +103,14 @@ public:
 	~dh_test();
 	bool testing(void);
 private:
-	void test_data_read(std::vector<byte> *data);
+	void get_keyB(byte *keyB, const std::size_t &length);
+	void keyA_read(const byte *keyA, const std::size_t &length);
+	bool keycmp()const;
 private:
-	const std::string test_data_path_;
-	const std::size_t n_test_;
+	std::string test_data_path_;
+	std::size_t n_test_;
+	PTR_DH_TYPE dh_type_;
+	diffy_helm *dh_;
 };
 class hash_test : public test
 {

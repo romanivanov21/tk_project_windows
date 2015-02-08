@@ -87,11 +87,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="crypt_gost_test.h" />
-    <ClInclude Include="hex_parser.h" />
     <ClInclude Include="gost_test_exeption.h" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="test_data\dhdata.xml" />
+    <Xml Include="test_data\dhdata.xml">
+      <SubType>Designer</SubType>
+    </Xml>
     <Xml Include="test_data\gdata.xml">
       <SubType>Designer</SubType>
     </Xml>

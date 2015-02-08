@@ -2,6 +2,7 @@
 #include "..\crypt_gost_28147-89\crypt_gost_types.h"
 #include"..\shared_code\gost_include.h"
 #include"..\shared_code\gost_types_convert.h"
+#include"..\network_server_dll\network_server_dll.h"
 #include"gost_test_exeption.h"
 #include"tinyxml.h"
 #include <io.h>
@@ -74,7 +75,7 @@ static void bin_parser(std::string &vaule)
 		}
 	}
 }
-static std::string to_hex(const byte *byte_data, const std::size_t &length)
+std::string to_hex(const byte *byte_data, const std::size_t &length)
 {
 	assert((byte_data != 0) || (length != 0));
 	std::vector<byte> v(&byte_data[0], &byte_data[length - 1]);
@@ -346,6 +347,85 @@ bool gost_test::crypt(const std::size_t &n)
 	return true;
 }
 
+dh_test::dh_test(const std::string &test_data_path, const std::size_t &n_test)
+{
+	assert(test_data_path.length() != 0);
+	assert(n_test != 0);
+#if CONSOLE_APPLICATION 
+	std::cout<<"DIFFY_HELMAN"<<std::endl;
+#endif
+	test_data_path_ = test_data_path;
+	n_test_ = n_test;
+	dh_type_ = new DH_TYPE();
+	dh_ = 0;
+}
+dh_test::~dh_test()
+{
+	delete dh_type_; delete dh_;
+}
+void dh_test::keyA_read(const byte *keyA, const std::size_t &length)
+{
+	assert((keyA != 0) || (length != 0));
+	TiXmlDocument *dh_deta= new TiXmlDocument(test_data_path_.c_str());
+	if(!(dh_deta->LoadFile()))
+	{
+		delete dh_deta;
+		throw new gost_exception("The dataful file for testing didn't manage to be opened");
+	}
+	TiXmlElement *pElem = dh_deta->FirstChildElement("dh");
+	if(!pElem) {
+		delete dh_deta;
+		throw new std::string("Error read crdata");
+	}
+
+	std::string value = "";
+	for(const TiXmlElement *item = pElem->FirstChildElement("dh"); item; item = item->NextSiblingElement("dh"))
+	{
+		std::string temp = "";
+		temp = item->Attribute("gkey");
+		value = (item->Attribute("vaule"));
+	}
+	delete dh_deta;
+}
+void dh_test::get_keyB(byte *keyB, const std::size_t &length)
+{
+	assert((keyB != 0) || (length != 0));
+	//
+}
+
+bool dh_test::testing()
+{
+	dh_ = new diffy_helm();
+	boost::uint32_t port = 8001;
+	server_netw::server *s = new server_netw::server(port);
+	s->start();
+
+	dh_->get_p(dh_type_->p_byte, SIZE_DH_BUFF_BYTE);
+	s->send_bytes(dh_type_->p_byte, SIZE_DH_BUFF_BYTE);
+
+	dh_->get_q(dh_type_->q_byte, SIZE_DH_BUFF_BYTE);
+	s->send_bytes(dh_type_->q_byte, SIZE_DH_BUFF_BYTE);
+
+	dh_->get_g(dh_type_->g_byte);
+	s->send_bytes(&dh_type_->g_byte, 1);
+
+	dh_->generate_A(dh_type_->keyA, SIZE_DH_BUFF_BYTE);
+	s->send_bytes(dh_type_->keyA, SIZE_DH_BUFF_BYTE);
+	if(s->read_bytes(dh_type_->keyB, SIZE_DH_BUFF_BYTE) != SIZE_DH_BUFF_BYTE)
+	{
+		print_result("Error read B");
+	}
+#if CONSOLE_APPLICATION
+	print_result(dh_type_->keyB, SIZE_DH_BUFF_BYTE);
+#endif
+	dh_->generate_K(dh_type_->keyB,SIZE_DH_BUFF_BYTE, dh_type_->gkey, SIZE_DH_BUFF_BYTE);
+#if CONSOLE_APPLICATION
+	print_result(dh_type_->gkey, SIZE_DH_BUFF_BYTE);
+#endif
+
+	delete s;
+	return false;
+}
 hash_test::hash_test(const std::string &ghash_path, const std::size_t &n_test)
 {
 	assert(ghash_path.length() != 0);

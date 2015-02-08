@@ -29,9 +29,6 @@
     <ClInclude Include="gost_test_exeption.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="hex_parser.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="test_data\dhdata.xml">

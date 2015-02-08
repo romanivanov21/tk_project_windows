@@ -143,7 +143,13 @@ int main(int argc, char *argv[])
 		{
 			std::cout<<"ERROR HASH"<<std::endl;
 		}
+		dh_test *dh = new dh_test("F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\gost_test\\test_data\\dhdata.xml",1);
+		if(!(dh->testing()))
+		{
+			std::cout<<"ERROR DH"<<std::endl;
+		}
 		delete g;
+		delete h;
 	}
 	catch(gost_exception &ex)
 	{
