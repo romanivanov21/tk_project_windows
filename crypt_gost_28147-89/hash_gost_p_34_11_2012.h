@@ -10,7 +10,11 @@
 #ifndef _HASH_P_34_11_2012_H_
 #define _HASH_P_34_11_2012_H_
 
+#if _DEBUG
 #define PRINT_DEBUG_INFO 1
+#else
+#define PRINT_DEBUG_INFO 0
+#endif
 
 #define GOST_HASH_API __declspec(dllexport)
 #include"crypt_gost_types.h"

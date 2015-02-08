@@ -21,6 +21,7 @@
 void bin_parser(byte *c, const size_t *size)
 {
 	size_t i = 0;
+	assert((c != NULL) || (*size != 0));
 	for(i = 0; i < *size; i++)
 	{
 		switch(c[i])
@@ -81,7 +82,7 @@ void data_to_k(const byte *data)
 {
 	size_t i = 0;
 	size_t j = 0;
-
+	assert(data != NULL);
 	for(i = 0; i < 16; i++)
 	{
 		k8[j] = data[i];
@@ -308,6 +309,8 @@ CRYPT_GOST_API void gostcrypt( word32 const *in_data, word32  *out_data, word32 
 {
 	register word32 n1, n2;
 	
+	assert(in_data != NULL || out_data != NULL || gost_key != NULL);
+
 	n1 = in_data[0];
 	n2 = in_data[1];
 	
@@ -356,6 +359,7 @@ CRYPT_GOST_API void gostdecrypt( word32 const *in_data, word32 *out_data, word32
 	register word32 n1, n2;
 	n1 = in_data[0];
 	n2 = in_data[1];
+	assert(in_data != NULL || out_data != NULL || gost_key != NULL);
 	n2 ^= f(n1 + gost_key[0]);
 	n1 ^= f(n2 + gost_key[1]);
 	n2 ^= f(n1 + gost_key[2]);

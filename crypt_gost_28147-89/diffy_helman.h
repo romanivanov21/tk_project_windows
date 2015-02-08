@@ -12,8 +12,11 @@
 
 #define DIFFY_HELMAN_API __declspec(dllexport)
 
-
+#if _DEBUG
 #define DEBUG_INFO_PRINT 1
+#else
+#define DEBUG_INFO_PRINT 0
+#endif
 
 #include "inc_crypt_pp.h"
 
