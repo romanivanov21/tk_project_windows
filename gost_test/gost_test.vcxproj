@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="crypt_gost_test.h" />
+    <ClInclude Include="crypt_gost_test_types.h" />
     <ClInclude Include="gost_test_exeption.h" />
   </ItemGroup>
   <ItemGroup>

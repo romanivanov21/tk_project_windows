@@ -17,7 +17,7 @@
 #include <iomanip>
 //отключение warning на функцию fopen_s
 #pragma warning (disable: 4996)
-static void bin_parser(std::string &vaule)
+void test::bin_parser(std::string &vaule)
 {
 	assert(vaule.length() != 0);
 	for(std::size_t i = 0; i < vaule.length(); i++)
@@ -75,7 +75,7 @@ static void bin_parser(std::string &vaule)
 		}
 	}
 }
-std::string to_hex(const byte *byte_data, const std::size_t &length)
+std::string test::to_hex(const byte *byte_data, const std::size_t &length)
 {
 	assert((byte_data != 0) || (length != 0));
 	std::vector<byte> v(&byte_data[0], &byte_data[length - 1]);
@@ -363,35 +363,6 @@ dh_test::~dh_test()
 {
 	delete dh_type_; delete dh_;
 }
-void dh_test::keyA_read(const byte *keyA, const std::size_t &length)
-{
-	assert((keyA != 0) || (length != 0));
-	TiXmlDocument *dh_deta= new TiXmlDocument(test_data_path_.c_str());
-	if(!(dh_deta->LoadFile()))
-	{
-		delete dh_deta;
-		throw new gost_exception("The dataful file for testing didn't manage to be opened");
-	}
-	TiXmlElement *pElem = dh_deta->FirstChildElement("dh");
-	if(!pElem) {
-		delete dh_deta;
-		throw new std::string("Error read crdata");
-	}
-
-	std::string value = "";
-	for(const TiXmlElement *item = pElem->FirstChildElement("dh"); item; item = item->NextSiblingElement("dh"))
-	{
-		std::string temp = "";
-		temp = item->Attribute("gkey");
-		value = (item->Attribute("vaule"));
-	}
-	delete dh_deta;
-}
-void dh_test::get_keyB(byte *keyB, const std::size_t &length)
-{
-	assert((keyB != 0) || (length != 0));
-	//
-}
 
 bool dh_test::testing()
 {
@@ -422,9 +393,59 @@ bool dh_test::testing()
 #if CONSOLE_APPLICATION
 	print_result(dh_type_->gkey, SIZE_DH_BUFF_BYTE);
 #endif
-
 	delete s;
+	if(!keycmp())
+	{
+		return false;
+	}
 	return false;
+}
+std::string dh_test::key_read()
+{
+	std::string value = "";
+	TiXmlDocument *gkey = new TiXmlDocument(test_data_path_.c_str());
+	if(!(gkey->LoadFile()))
+	{
+		delete gkey;
+		throw new gost_exception("The dataful file for testing didn't manage to be opened dhdata.xml");
+	}
+	TiXmlElement *pElem = gkey->FirstChildElement("dh");
+	if(!pElem) {
+		delete gkey;
+		throw new gost_exception("Error read key from dhdata.xml");
+	}
+
+	for(const TiXmlElement *item = pElem->FirstChildElement("key"); item; item = item->NextSiblingElement("key"))
+	{
+		value = (item->Attribute("vaule"));
+	}
+	delete gkey;
+	return value;
+}
+bool dh_test::keycmp()
+{
+	std::string temp = "";
+	try
+	{
+		temp = key_read();
+	}
+	catch(gost_exception &ex)
+	{
+		throw gost_exception(ex.what());
+	}
+	if(temp.length() == 0)
+	{
+		throw gost_exception("Error read key from dhdata.xml");
+	}
+	std::string value = to_hex(dh_type_->gkey, SIZE_DH_BUFF_BYTE);
+	for(std::size_t i = 0; i < value.length(); i++)
+	{
+		if(temp[i] != value[i])
+		{
+			return false;
+		}
+	}
+	return true;
 }
 hash_test::hash_test(const std::string &ghash_path, const std::size_t &n_test)
 {
