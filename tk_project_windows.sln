@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "crypt_gost_28147-89", "cryp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gost_test", "gost_test\gost_test.vcxproj", "{72270973-A243-4649-881C-319AE78E44E3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "client_gost_test", "client_gost_test\client_gost_test.vcxproj", "{0216418F-492F-4622-8B34-CD661105D817}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +78,16 @@ Global
 		{72270973-A243-4649-881C-319AE78E44E3}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{72270973-A243-4649-881C-319AE78E44E3}.Release|Win32.ActiveCfg = Release|Win32
 		{72270973-A243-4649-881C-319AE78E44E3}.Release|Win32.Build.0 = Release|Win32
+		{0216418F-492F-4622-8B34-CD661105D817}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{0216418F-492F-4622-8B34-CD661105D817}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{0216418F-492F-4622-8B34-CD661105D817}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{0216418F-492F-4622-8B34-CD661105D817}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0216418F-492F-4622-8B34-CD661105D817}.Debug|Win32.Build.0 = Debug|Win32
+		{0216418F-492F-4622-8B34-CD661105D817}.Release|Any CPU.ActiveCfg = Release|Win32
+		{0216418F-492F-4622-8B34-CD661105D817}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{0216418F-492F-4622-8B34-CD661105D817}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{0216418F-492F-4622-8B34-CD661105D817}.Release|Win32.ActiveCfg = Release|Win32
+		{0216418F-492F-4622-8B34-CD661105D817}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
