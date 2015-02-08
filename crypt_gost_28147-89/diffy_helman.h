@@ -23,6 +23,7 @@ class diffy_helm
 {
 public:
 	DIFFY_HELMAN_API explicit diffy_helm(void);
+	DIFFY_HELMAN_API explicit diffy_helm(byte *p, const std::size_t &p_length, byte *q, const std::size_t &q_length, byte &g);
 	DIFFY_HELMAN_API ~diffy_helm();
 
 	DIFFY_HELMAN_API void get_p(byte *p, const std::size_t &p_size)const;

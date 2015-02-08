@@ -22,6 +22,8 @@ void add_module_512(const byte *a, const byte *b, byte *c)
 	int i = 0;
 	int t = 0;
 
+	assert((a != NULL) || (b != NULL) || (c != NULL));
+
 	for(i = 63; i >= 0; i--)
 	{
 		t = a[i] + b[i] + (t >> 8);
@@ -34,7 +36,7 @@ void add_xor_512(const byte *a, const byte *b, byte *c)
 	int i = 0;
 	const word64 *A = (word64 *)a, *B = (word64 *)b;
 	word64 *C=(word64 *)c;
-
+	assert((a != NULL) || (b != NULL) || (c != NULL));
 	for(i = 0; i < 8; i++)
 	{
 		C[i] = A[i] ^ B[i];
@@ -44,7 +46,7 @@ void add_xor_512(const byte *a, const byte *b, byte *c)
 void S(byte *state)
 {
 	uint i = 0;
-
+	assert(state != NULL);
 	for(i = 0; i < 64; i++)
 	{
 		state[i] = Sbox[state[i]];
@@ -55,7 +57,7 @@ void L(byte *state)
 {
 	word64 v = 0;
 	uint i = 0, j = 0, k = 0;
-
+	assert(state != NULL);
 	for(i = 0; i < 8; i++)
 	{
 		v = 0;
@@ -78,7 +80,7 @@ void P(byte *state)
 {
 	uint i = 0;
 	byte t[64] = {0};
-
+	assert(state != NULL);
 	for(i = 0; i < 64; i++)
 	{
 		t[i] = state[Tau[i]];
@@ -89,6 +91,7 @@ void P(byte *state)
 
 void key_schedule(byte *K, int i)
 {
+	assert(K != NULL);
 	add_xor_512(K,C[i],K);
 
     S(K);
@@ -99,7 +102,7 @@ void key_schedule(byte *K, int i)
 void E(byte *K, const byte *m, byte *state)
 {
 	uint i = 0;
-
+	assert((K != NULL) || (m != NULL) || (state != NULL));
 	memcpy(K, K, 64);
 
 	add_module_512(m, K, state);
@@ -118,7 +121,7 @@ void g_N(const byte *N, byte *h, const byte *m)
 {
 	byte t[64];
 	byte K[64];
-
+	assert(N != NULL || h != NULL || m != NULL);
 	add_module_512(N, h, K);
 
     S(K);
@@ -157,9 +160,11 @@ void hash_X(byte *IV, const byte *message, word64 length, byte *out)
 			0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 			0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
 	};
+	
 	byte m[64], *hash = IV;
 	word64 len = length;
 
+	assert(IV != NULL || message != NULL || length != 0 || out != NULL);
 	while (len >= 512)
 	{
 		memcpy(m, message + len/8 - 63 - ( (len & 0x7) == 0 ), 64);
@@ -190,7 +195,6 @@ void hash_X(byte *IV, const byte *message, word64 length, byte *out)
 
 void hash_512(const byte *message, word64 length, byte *out)
 {
-	assert(out != 0);
 	byte IV[64] =
 	{
 			0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
@@ -199,12 +203,13 @@ void hash_512(const byte *message, word64 length, byte *out)
 			0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
 	};
 
+	assert(out != 0);
+
 	hash_X(IV, message, length, out);
 }
 
 void hash_256(const byte *message, word64 length,byte *out)
 {
-	assert(out != 0);
 	byte IV[64] =
 	{
 			0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,
@@ -213,6 +218,8 @@ void hash_256(const byte *message, word64 length,byte *out)
 			0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01,0x01
 	};
 	byte hash[64];
+
+	assert(out != 0);
 
 	hash_X(IV,message,length,hash);
 

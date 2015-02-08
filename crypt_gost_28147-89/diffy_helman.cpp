@@ -9,7 +9,7 @@
 
 #include "diffy_helman.h"
 #include "inc_crypt_pp.h"
-
+#include "..\crypt_gost_28147-89\inc_crypt_pp.h"
 #include <iostream>
 
 DIFFY_HELMAN_API diffy_helm::diffy_helm(void)
@@ -42,7 +42,20 @@ DIFFY_HELMAN_API diffy_helm::diffy_helm(void)
 #endif
 
 }
-
+DIFFY_HELMAN_API diffy_helm::diffy_helm(byte *p, const std::size_t &p_length, byte *q, const std::size_t &q_length, byte &g)
+{
+	assert((p != 0) || (p_length != 0) || (q != 0) || (q_length != 0) || (g != 0));
+	for(std::size_t i = 0; i < p_length; i++)
+	{
+		p_.SetByte(i, p[i]);
+	}
+	for(std::size_t i = 0; i < q_length; i++)
+	{
+		q_.SetByte(i, q[i]);
+	}
+	g_.SetByte(0, g);
+	dh_.AccessGroupParameters().Initialize(p_, q_, g_);
+}
 DIFFY_HELMAN_API diffy_helm::~diffy_helm()
 {
 	if(is_generateA_ == true)
@@ -82,6 +95,8 @@ DIFFY_HELMAN_API void diffy_helm::get_g(byte &g)
 
 DIFFY_HELMAN_API void diffy_helm::generate_A(byte *A, const std::size_t &size_A)
 {
+	assert((A != NULL) || (size_A != 0));
+	memset(A, 0, size_A);
 	dhA_.AccessGroupParameters().Initialize(p_, q_, g_);
 
 	priv_A_ = new CryptoPP::SecByteBlock(dhA_.PrivateKeyLength());
