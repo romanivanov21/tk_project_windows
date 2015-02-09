@@ -21,9 +21,15 @@
     <ClCompile Include="gtest_network.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="gtets_client.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gtest_network.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="gtest_client.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>

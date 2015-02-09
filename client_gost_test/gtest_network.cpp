@@ -13,8 +13,14 @@ client::~client()
 }
 void client::client_connect()
 {
-	socket_.connect(ep_);
-
+	try
+	{
+		socket_.connect(ep_);
+	}
+	catch(...)
+	{
+		throw client_exception("Ñan not connect to the server");
+	}
 }
 void client::print_result(byte *msg, const std::size_t &length)const
 {
