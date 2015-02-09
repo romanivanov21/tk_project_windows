@@ -398,7 +398,7 @@ bool dh_test::testing()
 	{
 		return false;
 	}
-	return false;
+	return true;
 }
 std::string dh_test::key_read()
 {
@@ -414,7 +414,6 @@ std::string dh_test::key_read()
 		delete gkey;
 		throw new gost_exception("Error read key from dhdata.xml");
 	}
-
 	for(const TiXmlElement *item = pElem->FirstChildElement("key"); item; item = item->NextSiblingElement("key"))
 	{
 		value = (item->Attribute("vaule"));
