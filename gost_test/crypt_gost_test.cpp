@@ -4,6 +4,7 @@
 #include"..\shared_code\gost_types_convert.h"
 #include"..\network_server_dll\network_server_dll.h"
 #include"gost_test_exeption.h"
+#include <boost\thread.hpp>
 #include"tinyxml.h"
 #include <io.h>
 #include <iostream>
@@ -15,8 +16,11 @@
 #include <sstream>
 #include <iterator>
 #include <iomanip>
+#include <Windows.h>
 //отключение warning на функцию fopen_s
 #pragma warning (disable: 4996)
+static STARTUPINFO cif;
+static PROCESS_INFORMATION pi;
 void test::bin_parser(std::string &vaule)
 {
 	assert(vaule.length() != 0);
@@ -361,6 +365,10 @@ dh_test::dh_test(const std::string &test_data_path, const std::size_t &n_test)
 }
 dh_test::~dh_test()
 {
+	WaitForSingleObject( pi.hProcess, INFINITE );
+	CloseHandle( pi.hProcess );
+	CloseHandle( pi.hThread );
+	thrd_.join();
 	delete dh_type_; delete dh_;
 }
 
@@ -369,6 +377,7 @@ bool dh_test::testing()
 	dh_ = new diffy_helm();
 	boost::uint32_t port = 8001;
 	server_netw::server *s = new server_netw::server(port);
+	create_process_client();
 	s->start();
 
 	dh_->get_p(dh_type_->p_byte, SIZE_DH_BUFF_BYTE);
@@ -421,6 +430,16 @@ std::string dh_test::key_read()
 	delete gkey;
 	return value;
 }
+void create_process_client()
+{
+	
+	ZeroMemory(&cif,sizeof(STARTUPINFO));
+	Sleep(1000);
+	if(CreateProcess(L"F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\Debug\\client_gost_test.exe",NULL,NULL,NULL,NULL,FALSE,NULL,NULL,&cif,&pi) != TRUE)
+	{
+		std::cout<<"client_gost_test.exe start error"<<std::endl;
+	}
+}
 bool dh_test::keycmp()
 {
 	std::string temp = "";
@@ -446,6 +465,11 @@ bool dh_test::keycmp()
 	}
 	return true;
 }
+void dh_test::client_start()
+{
+	thrd_ = boost::thread(boost::bind(create_process_client));
+}
+
 hash_test::hash_test(const std::string &ghash_path, const std::size_t &n_test)
 {
 	assert(ghash_path.length() != 0);

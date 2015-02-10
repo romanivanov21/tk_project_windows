@@ -4,10 +4,13 @@
 #include"crypt_gost_test_types.h"
 #include"..\crypt_gost_28147-89\crypt_gost_types.h"
 #include"..\crypt_gost_28147-89\diffy_helman.h"
+#include <boost\thread\thread.hpp>
 #include <boost\noncopyable.hpp>
 #include <vector>
 #include <string>
 #include <iostream>
+
+void create_process_client();
 
 class test : private boost::noncopyable
 {
@@ -51,11 +54,13 @@ public:
 private:
 	std::string key_read();
 	bool keycmp();
+	void client_start();
 private:
 	std::string test_data_path_;
 	std::size_t n_test_;
 	PTR_DH_TYPE dh_type_;
 	diffy_helm *dh_;
+	boost::thread thrd_;
 };
 class hash_test : public test
 {

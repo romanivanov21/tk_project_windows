@@ -17,36 +17,102 @@
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
+#include <boost\shared_ptr.hpp>
 
 int main(int argc, char *argv[])
 {
+	std::string arg_command = "";
 	const std::string path = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\crypt_gost_28147-89\\ginit.bin";
-	const std::string path_data = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\gost_test\\test_data\\gdata.xml";
-	try
+	const std::string path_gdata = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\gost_test\\test_data\\gdata.xml";
+	const std::string path_hdata = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\gost_test\\test_data\\hdata.xml";
+	const std::string path_dhdata = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\gost_test\\test_data\\dhdata.xml";
+	if(argv[1] != NULL)
 	{
-		gost_test *g = new gost_test(path, path_data, 1);
-		if(!(g->testing()))
-		{
-			std::cout<<"ERROR"<<std::endl;
-		}
-		hash_test *h = new hash_test("F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\gost_test\\test_data\\hdata.xml",1);
-		if(!(h->testing()))
-		{
-			std::cout<<"ERROR HASH"<<std::endl;
-		}
-		dh_test *dh = new dh_test("F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\gost_test\\test_data\\dhdata.xml",1);
-		if(!(dh->testing()))
-		{
-			std::cout<<"ERROR DH"<<std::endl;
-		}
-		delete g;
-		delete h;
+		arg_command = argv[1];
+		std::cout<<arg_command<<std::endl;
 	}
-	catch(gost_exception &ex)
+	if(arg_command == "-all")
 	{
-		std::cout<<ex.what()<<std::endl;
+		try
+		{
+			boost::shared_ptr<gost_test> g(new gost_test(path, path_gdata, 1));
+			if(!(g->testing()))
+			{
+				std::cout<<"ERROR"<<std::endl;
+				return -1;
+			}
+			boost::shared_ptr<hash_test> h(new hash_test(path_hdata,1));
+			if(!(h->testing()))
+			{
+				std::cout<<"ERROR HASH"<<std::endl;
+				return -1;
+			}
+			boost::shared_ptr<dh_test> dh(new dh_test(path_dhdata,1));
+			if(!(dh->testing()))
+			{
+				std::cout<<"ERROR DH"<<std::endl;
+				return -1;
+			}
+		}
+		catch(gost_exception &ex)
+		{
+			std::cout<<ex.what()<<std::endl;
+			return -1;
+		}
+		printf("\nAll tests passed.\n");
 	}
-	printf("\nAll tests passed.\n");
-	getchar();
+	if(arg_command == "-g")
+	{
+		try
+		{
+			boost::shared_ptr<gost_test> g(new gost_test(path, path_gdata, 1));
+			if(!(g->testing()))
+			{
+				std::cout<<"ERROR"<<std::endl;
+				return -1;
+			}
+		}
+		catch(gost_exception &ex)
+		{
+			std::cout<<ex.what()<<std::endl;
+			return -1;
+		}
+		printf("\nAll tests passed.\n");
+	}
+	if(arg_command == "-h")
+	{
+		try
+		{
+			boost::shared_ptr<hash_test> h(new hash_test(path_hdata,1));
+			if(!(h->testing()))
+			{
+				std::cout<<"ERROR HASH"<<std::endl;
+				return -1;
+			}
+		}
+		catch(gost_exception &ex)
+		{
+			std::cout<<ex.what()<<std::endl;
+		}
+		printf("\nAll tests passed.\n");
+	}
+	if(arg_command == "-dh")
+	{
+		try
+		{
+			boost::shared_ptr<dh_test> dh(new dh_test(path_dhdata,1));
+			if(!(dh->testing()))
+			{
+				std::cout<<"ERROR DH"<<std::endl;
+				return -1;
+			}
+		}
+		catch(gost_exception &ex)
+		{
+			std::cout<<ex.what()<<std::endl;
+			return -1;
+		}
+		printf("\nAll tests passed.\n");
+	}
 	return 0;
 }
