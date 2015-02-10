@@ -1,5 +1,11 @@
 #include "gtest_client.h"
 #include "tinyxml.h"
+
+#if _DEBUG 
+#define DEBUG_INFO_PRINT 0
+#else
+#define DEBUG_INFO_PRINT 0
+#endif
 test_client::test_client(const std::string &path_data, const std::size_t &port) : 
 	path_data_(path_data), port_(port)
 {
@@ -40,34 +46,46 @@ void test_client::testing()
 	{
 		throw client_exception("Error get from server p");
 	}
+#if DEBUG_INFO_PRINT 
 	printf("p = ");
 	c_->print_result(client_dh_.p_destBuff, SIZE_DH_BYTE_BUFF);
+#endif
 	if(c_->read_data(client_dh_.q_destBuff, SIZE_DH_BYTE_BUFF) != SIZE_DH_BYTE_BUFF)
 	{
 		throw client_exception("Error get from server q");
 	}
+#if DEBUG_INFO_PRINT
 	printf("q = ");
 	c_->print_result(client_dh_.q_destBuff, SIZE_DH_BYTE_BUFF);
+#endif
 	if(c_->read_data(&client_dh_.g,1) != 1)
 	{
 		throw client_exception("Error get from server g");
 	}
+#if DEBUG_INFO_PRINT
 	printf("g = ");
 	c_->print_result(&client_dh_.g,1);
+#endif
 	diffy_helm *dh = new diffy_helm(client_dh_.p_destBuff,SIZE_DH_BYTE_BUFF,client_dh_.q_destBuff,SIZE_DH_BYTE_BUFF,client_dh_.g);
 	if(c_->read_data(client_dh_.B_destBuff, SIZE_DH_BYTE_BUFF) != SIZE_DH_BYTE_BUFF)
 	{
 		throw client_exception("Error get from server  A");
 	}
+#if DEBUG_INFO_PRINT
 	printf("B = ");
 	c_->print_result(client_dh_.B_destBuff, SIZE_DH_BYTE_BUFF);
+#endif
 	dh->generate_A(client_dh_.A_destBuff, SIZE_DH_BYTE_BUFF);
+#if DEBUG_INFO_PRINT
 	printf("A = ");
 	c_->print_result(client_dh_.A_destBuff, SIZE_DH_BYTE_BUFF);
+#endif
 	c_->send_data(client_dh_.A_destBuff, SIZE_DH_BYTE_BUFF);
 	dh->generate_K(client_dh_.B_destBuff, SIZE_DH_BYTE_BUFF, client_dh_.key_destBuff, SIZE_DH_BYTE_BUFF);
+#if DEBUG_INFO_PRINT
 	printf("K = ");
 	c_->print_result(client_dh_.key_destBuff, SIZE_DH_BYTE_BUFF);
+#endif
 	std::string key = to_hex(client_dh_.key_destBuff, SIZE_DH_BYTE_BUFF);
 	try
 	{

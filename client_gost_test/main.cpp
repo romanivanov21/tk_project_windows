@@ -14,7 +14,6 @@ int main(void)
 		delete test;
 		std::cout<<ex.wath()<<std::endl;
 	}
-	getchar();
 	system("exit");
 	return 0;
 }
