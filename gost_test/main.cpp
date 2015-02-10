@@ -31,6 +31,10 @@ int main(int argc, char *argv[])
 		arg_command = argv[1];
 		std::cout<<arg_command<<std::endl;
 	}
+	else
+	{
+		arg_command = "-all";
+	}
 	if(arg_command == "-all")
 	{
 		try
