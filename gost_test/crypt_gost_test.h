@@ -11,7 +11,7 @@
 #define _TEST_CRYPT_H_
 
 #include"crypt_gost_test_types.h"
-#include"..\crypt_gost_28147-89\crypt_gost_types.h"
+#include"crypt_gost_types.h"
 #include"..\crypt_gost_28147-89\diffy_helman.h"
 #include <boost\thread\thread.hpp>
 #include <boost\noncopyable.hpp>

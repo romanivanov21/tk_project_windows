@@ -8,10 +8,11 @@
 ********************************************************************/
 
 #include"network_server_dll.h"
+#include"network_server_exception.h"
 #include"inc_boost_heders.h"
-#include"..\shared_code\gost_include.h"
-#include"..\shared_code\gost_types_convert.h"
-#include "..\crypt_gost_28147-89\crypt_gost_types.h"
+#include"gost_include.h"
+#include"gost_types_convert.h"
+#include "crypt_gost_types.h"
 #include "server_timer.h"
 
 #include <iostream>
@@ -26,16 +27,15 @@
 
 namespace server
 {
-	NETWORK_SERVER_API  server_network::server_network(const std::uint32_t port) : 
+	server_network::server_network(const std::uint32_t port) : 
 		port_(port),
 		socket_(io_service_), 
-		socket_icmp_(io_service_),
 		acceptor_(io_service_,boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port_)) 
 	{
-
+		assert(port != 0);
 	}
 	
-	NETWORK_SERVER_API	void server_network::start()
+	void server_network::start()
 	{
 		try
 		{
@@ -46,12 +46,13 @@ namespace server
 		{
 			acceptor_.close();
 			socket_.close();
-			throw new std::string("Socket accept error");
+			throw server::server_network_exception("Socket accept error");
 		}
 	}
 	
-	NETWORK_SERVER_API	void server_network::send_bytes(byte *data, const std::size_t &size)
+	void server_network::send_bytes(byte *data, const std::size_t &size)
 	{
+		assert(data != NULL || size != 0);
 		try
 		{
 			socket_.write_some(boost::asio::buffer(data,size));
@@ -60,12 +61,13 @@ namespace server
 		{
 			acceptor_.close();
 			socket_.close();
-			throw new std::string("Siket write_some error");
+			throw server::server_network_exception("Siket write_some error");
 		}
 	}
 	
-	NETWORK_SERVER_API	boost::int32_t server_network::read_bytes(byte *data, const std::size_t &size)
+	boost::int32_t server_network::read_bytes(byte *data, const std::size_t &size)
 	{
+		assert(data != NULL || size != 0);
 		boost::int32_t bytes = -1;
 		try
 		{
@@ -75,63 +77,18 @@ namespace server
 		{
 			acceptor_.close();
 			socket_.close();
-			throw new std::string("Soket read_bytes error");
+			throw server::server_network_exception("Soket read_bytes error");
 		}
 		return bytes;
 	}
 
-	NETWORK_SERVER_API	server_network::~server_network()
+	server_network::~server_network()
 	{
 		acceptor_.close();
 		socket_.close();
 	}
-	std::string server_time::current_date_time_string()
-	{
-		return boost::posix_time::to_simple_string(boost::posix_time::second_clock::local_time());
-	}
-
-	void server_time::timer_start()
-	{
-		start_time_ = boost::posix_time::microsec_clock::local_time();
-	}
-
-	boost::int64_t server_time::timer_stop()
-	{
-		stop_time_ = boost::posix_time::microsec_clock::local_time();
-		return (start_time_ - stop_time_).total_microseconds();
-	}
 }
-NETWORK_SERVER_API void server_start(byte *data, std::size_t size)
-{
-	server::server_network s(8001);
-	server::server_time time;
-	try
-	{
-		std::cout<<time.current_date_time_string()<<std::endl;
-		s.start();
-		byte data_[8];
-		std::size_t size_;
-		if(s.read_bytes(data_,size_) == -1)
-		{
-			std::cout<<"Не удалось принять данные"<<std::endl;
-		}
-		s.send_bytes(data,size);
-		for(std::size_t i = 0; i < 8; i++)
-		{
-			std::cout<<data_[i];
-		}
-		std::cout<<std::endl;
-		for(int i = 0; i < 8; i++)
-		{
-			std::cout<<data[i];
-		}
-		std::cout<<std::endl;
-	}
-	catch(std::string s)
-	{
-		std::cout<<s<<std::endl;
-	}
-}
+
 BOOL WINAPI DllMain(HANDLE hInst, 
 					ULONG ul_reason_for_call, 
 					LPVOID lpReserved)

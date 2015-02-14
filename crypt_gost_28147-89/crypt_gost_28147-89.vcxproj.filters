@@ -18,9 +18,6 @@
     <ClInclude Include="crypt_gost_28147-89_API.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="crypt_gost_types.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="diffy_helman.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>

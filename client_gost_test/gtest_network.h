@@ -1,7 +1,7 @@
 #ifndef _GTEST_NETWORK_H_
 #define _GTEST_NETWORK_H_
-#include"..\network_server_dll\inc_boost_heders.h"
-#include"..\crypt_gost_28147-89\crypt_gost_types.h"
+#include"inc_boost_heders.h"
+#include"crypt_gost_types.h"
 
 #define SIZE_DH_BYTE_BUFF 32
 

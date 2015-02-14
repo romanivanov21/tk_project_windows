@@ -23,7 +23,7 @@
 
 #define CONSOLE_APPLICATION 1
 
-#include"..\crypt_gost_28147-89\crypt_gost_types.h"
+#include"crypt_gost_types.h"
 
 #pragma pack(push,1)
 typedef struct

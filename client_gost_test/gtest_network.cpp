@@ -1,5 +1,5 @@
 #include"gtest_network.h"
-#include"..\crypt_gost_28147-89\crypt_gost_types.h"
+#include"crypt_gost_types.h"
 
 client::client(const std::size_t port) : port_(port),
 	ep_(boost::asio::ip::address::from_string("127.0.0.1"), 8001),

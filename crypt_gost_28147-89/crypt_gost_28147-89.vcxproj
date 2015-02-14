@@ -56,7 +56,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;CRYPT_GOST_2814789_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\import_library\cryptopp562;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\import_library\cryptopp562;$(SolutionDir)\shared_code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -87,7 +87,6 @@
   <ItemGroup>
     <ClInclude Include="crypt_gost_28147-89_API.h" />
     <ClInclude Include="crypt_gost_28147-89_init.h" />
-    <ClInclude Include="crypt_gost_types.h" />
     <ClInclude Include="diffy_helman.h" />
     <ClInclude Include="hash_gost_init.h" />
     <ClInclude Include="hash_gost_p_34_11_2012.h" />

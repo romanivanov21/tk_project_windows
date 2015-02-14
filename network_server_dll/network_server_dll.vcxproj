@@ -55,7 +55,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;NETWORK_SERVER_DLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\import_library\boost_1_57_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\import_library\boost_1_57_0;$(SolutionDir)\shared_code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -85,12 +85,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="inc_boost_heders.h" />
     <ClInclude Include="network_server_dll.h" />
+    <ClInclude Include="network_server_exception.h" />
+    <ClInclude Include="server_API.h" />
     <ClInclude Include="server_timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="network_server_dll.cpp" />
+    <ClCompile Include="server_API.cpp" />
+    <ClCompile Include="server_timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
