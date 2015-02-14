@@ -376,7 +376,7 @@ bool dh_test::testing()
 {
 	dh_ = new diffy_helm();
 	boost::uint32_t port = 8001;
-	server_netw::server *s = new server_netw::server(port);
+	server::server_network *s = new server::server_network(port);
 	create_process_client();
 	s->start();
 
