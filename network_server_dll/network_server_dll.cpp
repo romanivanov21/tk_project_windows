@@ -24,9 +24,9 @@
 
 #define DEBUG_VERSION 1
 
-namespace server_netw
+namespace server
 {
-	NETWORK_SERVER_API  server::server(const std::uint32_t port) : 
+	NETWORK_SERVER_API  server_network::server_network(const std::uint32_t port) : 
 		port_(port),
 		socket_(io_service_), 
 		socket_icmp_(io_service_),
@@ -35,7 +35,7 @@ namespace server_netw
 
 	}
 	
-	NETWORK_SERVER_API	void server::start()
+	NETWORK_SERVER_API	void server_network::start()
 	{
 		try
 		{
@@ -50,7 +50,7 @@ namespace server_netw
 		}
 	}
 	
-	NETWORK_SERVER_API	void server::send_bytes(byte *data, const std::size_t &size)
+	NETWORK_SERVER_API	void server_network::send_bytes(byte *data, const std::size_t &size)
 	{
 		try
 		{
@@ -64,7 +64,7 @@ namespace server_netw
 		}
 	}
 	
-	NETWORK_SERVER_API	boost::int32_t server::read_bytes(byte *data, const std::size_t &size)
+	NETWORK_SERVER_API	boost::int32_t server_network::read_bytes(byte *data, const std::size_t &size)
 	{
 		boost::int32_t bytes = -1;
 		try
@@ -80,97 +80,7 @@ namespace server_netw
 		return bytes;
 	}
 
-	void server::gost_decrypt_data(byte *data, std::size_t &size, const word32 *key)
-	{
-		word32 word32_data[2];
-		byte byte_data[8];
-		memset(word32_data,0,8);
-		memset(byte_data,0,8);
-		word32 crypt_word32_data[2];
-		byte crypt_byte_data[8];
-		memset(crypt_word32_data, 0, 8);
-		memset(crypt_byte_data, 0, 8);
-		std::size_t number_blocks = 0; //количество блоков для шифрования
-		if(size % 8 != 0)
-		{
-			number_blocks = (size / 8) + 1;
-		}
-		else
-		{
-			number_blocks = (size / 8);
-		}
-
-		std::size_t i = 0;
-		std::size_t i_blocks = 1;
-		while(i_blocks <= number_blocks)
-		{
-			std::size_t i_data = 0;
-			for(std::size_t n_byte = i; (n_byte < (i + 8)); n_byte++)
-			{
-				byte_data[i_data] = data[n_byte];
-				i_data++;
-			}
-			key_box_init();
-			byte_to_word32_data(byte_data, word32_data);
-			gostdecrypt(word32_data,crypt_word32_data, key);
-			word32_to_byte_data(crypt_word32_data, crypt_byte_data);
-
-			i_data = 0;
-			for(std::size_t n_byte = i; (n_byte < (i + 8)); n_byte++)
-			{
-				data[n_byte] = crypt_byte_data[i_data];
-				i_data++;
-			}
-			i+=8;
-			i_blocks++;
-		}
-	}
-	void server::gost_crypt_data(byte *data, std::size_t &size, const word32 *key)
-	{
-		word32 word32_data[2];
-		byte byte_data[8];
-		memset(word32_data,0,8);
-		memset(byte_data,0,8);
-		word32 crypt_word32_data[2];
-		byte crypt_byte_data[8];
-		memset(crypt_word32_data, 0, 8);
-		memset(crypt_byte_data, 0, 8);
-		std::size_t number_blocks = 0; //количество блоков для шифрования
-		if(size % 8 != 0)
-		{
-			number_blocks = (size / 8) + 1;
-		}
-		else
-		{
-			number_blocks = (size / 8);
-		}
-	
-		std::size_t i = 0;
-		std::size_t i_blocks = 1;
-		while(i_blocks <= number_blocks)
-		{
-			std::size_t i_data = 0;
-			for(std::size_t n_byte = i; (n_byte < (i + 8)); n_byte++)
-			{
-				byte_data[i_data] = data[n_byte];
-				i_data++;
-			}
-			key_box_init();
-			byte_to_word32_data(byte_data, word32_data);
-			gostcrypt(word32_data,crypt_word32_data, key);
-			word32_to_byte_data(crypt_word32_data, crypt_byte_data);
-
-			i_data = 0;
-			for(std::size_t n_byte = i; (n_byte < (i + 8)); n_byte++)
-			{
-				data[n_byte] = crypt_byte_data[i_data];
-				i_data++;
-			}
-			i+=8;
-			i_blocks++;
-		}
-	}
-	NETWORK_SERVER_API	server::~server()
+	NETWORK_SERVER_API	server_network::~server_network()
 	{
 		acceptor_.close();
 		socket_.close();
@@ -193,8 +103,8 @@ namespace server_netw
 }
 NETWORK_SERVER_API void server_start(byte *data, std::size_t size)
 {
-	server_netw::server s(8001);
-	server_netw::server_time time;
+	server::server_network s(8001);
+	server::server_time time;
 	try
 	{
 		std::cout<<time.current_date_time_string()<<std::endl;

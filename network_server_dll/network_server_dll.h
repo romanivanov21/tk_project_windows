@@ -26,9 +26,9 @@ NETWORK_SERVER_API void server_start(byte *data, std::size_t size);
 /*********************************************************
 * Класс, инкапсулирующий работу сервреа					 *
 **********************************************************/
-namespace server_netw
+namespace server
 {
-	class server : private boost::noncopyable
+	class server_network : private boost::noncopyable
 	{
 	public:
 		/*************************************************
@@ -36,12 +36,12 @@ namespace server_netw
 		* Параметры конструктора:						 *
 		* 1. Логический порт сервреа					 *
 		**************************************************/
-		NETWORK_SERVER_API explicit server(const std::uint32_t port);
+		NETWORK_SERVER_API explicit server_network(const std::uint32_t port);
 
 		/*************************************************
 		* Деструктор класса server						 *
 		**************************************************/
-		NETWORK_SERVER_API ~server();
+		NETWORK_SERVER_API ~server_network();
 
 		/*************************************************
 		* Функция для начала работы сервреа				 *
@@ -78,9 +78,6 @@ namespace server_netw
 		* Возвращаемое значение: строка дата и время	 *
 		**************************************************/
 		NETWORK_SERVER_API std::string client_connect_data_time() { return client_connect_time_; }
-	private:
-		void gost_crypt_data(byte *data, std::size_t &size, const word32 *key);
-		void gost_decrypt_data(byte *data, std::size_t &size, const word32 *key);
 	private:
 		server_time time_;
 		std::string client_connect_time_;
