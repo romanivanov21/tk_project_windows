@@ -26,14 +26,17 @@ int main(int argc, char *argv[])
 	const std::string path_gdata = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\gost_test\\test_data\\gdata.xml";
 	const std::string path_hdata = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\gost_test\\test_data\\hdata.xml";
 	const std::string path_dhdata = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\gost_test\\test_data\\dhdata.xml";
-	if(argv[1] != NULL)
+	if((argv[1] != NULL) || (argv[1] == "-g") || (argv[1] == "-h") || (argv[1] == "-dh") || (argv[1] == "-all"))
 	{
 		arg_command = argv[1];
-		std::cout<<arg_command<<std::endl;
 	}
 	else
 	{
-		arg_command = "-all";
+		std::cout<<"[-g]-GOST28147-89"<<std::endl;
+		std::cout<<"[-h]-hash"<<std::endl;
+		std::cout<<"[-dh]-diffy helman"<<std::endl;
+		std::cout<<"[-all]-algoritm"<<std::endl;
+		return -1;
 	}
 	if(arg_command == "-all")
 	{
