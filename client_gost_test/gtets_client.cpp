@@ -2,7 +2,7 @@
 #include "tinyxml.h"
 
 #if _DEBUG 
-#define DEBUG_INFO_PRINT 0
+#define DEBUG_INFO_PRINT 0 //для того, чтобы не печатал
 #else
 #define DEBUG_INFO_PRINT 0
 #endif
