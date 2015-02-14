@@ -54,7 +54,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\import_library\tinyxml_2_6_2;$(SolutionDir)\import_library\boost_1_57_0;$(SolutionDir)\import_library\cryptopp562;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\shared_code;$(SolutionDir)\import_library\tinyxml_2_6_2;$(SolutionDir)\import_library\boost_1_57_0;$(SolutionDir)\import_library\cryptopp562;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -84,12 +84,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="crypt_gost_test.cpp" />
+    <ClCompile Include="gost_test_network.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="crypt_gost_test.h" />
     <ClInclude Include="crypt_gost_test_types.h" />
     <ClInclude Include="gost_test_exeption.h" />
+    <ClInclude Include="gost_test_network.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="test_data\dhdata.xml">

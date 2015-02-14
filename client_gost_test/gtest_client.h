@@ -2,7 +2,7 @@
 #define _GTEST_CLIENT_H_
 
 #include "gtest_network.h"
-#include "..\network_server_dll\inc_boost_heders.h"
+#include "inc_boost_heders.h"
 #include "..\crypt_gost_28147-89\diffy_helman.h"
 #include <string>
 #include <iostream>

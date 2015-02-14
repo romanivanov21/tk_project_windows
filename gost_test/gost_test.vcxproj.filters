@@ -21,6 +21,9 @@
     <ClCompile Include="crypt_gost_test.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="gost_test_network.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="crypt_gost_test.h">
@@ -30,6 +33,9 @@
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="crypt_gost_test_types.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="gost_test_network.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>

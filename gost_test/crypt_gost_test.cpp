@@ -1,11 +1,11 @@
 #include"crypt_gost_test.h"
-#include "..\crypt_gost_28147-89\crypt_gost_types.h"
-#include"..\shared_code\gost_include.h"
-#include"..\shared_code\gost_types_convert.h"
-#include"..\network_server_dll\network_server_dll.h"
+#include "crypt_gost_types.h"
+#include"gost_include.h"
+#include"gost_types_convert.h"
+#include"gost_test_network.h"
 #include"gost_test_exeption.h"
 #include <boost\thread.hpp>
-#include"tinyxml.h"
+#include "tinyxml.h"
 #include <io.h>
 #include <iostream>
 #include <assert.h>
@@ -376,7 +376,7 @@ bool dh_test::testing()
 {
 	dh_ = new diffy_helm();
 	boost::uint32_t port = 8001;
-	server::server_network *s = new server::server_network(port);
+	gost_test_network *s = new gost_test_network(port);
 	create_process_client();
 	s->start();
 

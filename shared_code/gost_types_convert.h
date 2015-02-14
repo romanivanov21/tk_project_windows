@@ -12,7 +12,8 @@
 
 #ifndef _GOST_TYPES_CONVERT_H_
 #define _GOST_TYPES_CONCERT_H_
-#include "..\crypt_gost_28147-89\crypt_gost_types.h"
+
+#include "crypt_gost_types.h"
 #include <string.h>
 	
 void word32_to_byte_data(word32 *word32_, byte *byte_)

@@ -7,8 +7,7 @@
 ********************************************************************/
 
 #include "..\crypt_gost_28147-89\diffy_helman.h"
-#include "..\network_server_dll\network_server_dll.h"
-#include "..\shared_code\gost_include.h"
+#include "gost_include.h"
 #include "gost_test_exeption.h"
 #include "crypt_gost_test.h"
 
