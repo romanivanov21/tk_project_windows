@@ -27,14 +27,32 @@
 
 namespace server
 {
+	server_network* server_network::s_ = 0;
 	server_network::server_network(const std::uint32_t port) : 
 		port_(port),
 		socket_(io_service_), 
 		acceptor_(io_service_,boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port_)) 
 	{
 		assert(port != 0);
+
 	}
-	
+
+	server::server_network* server_network::instance(const std::size_t &port)
+	{
+		try
+		{
+			if(s_ == 0)
+			{
+				s_ = new server::server_network(port);
+			}
+		}
+		catch(server_network_exception &ex)
+		{
+			throw server_network_exception(ex.what());
+		}
+		return s_;
+	}
+
 	void server_network::start()
 	{
 		try
