@@ -91,11 +91,15 @@
     <ClInclude Include="hash_gost_init.h" />
     <ClInclude Include="hash_gost_p_34_11_2012.h" />
     <ClInclude Include="inc_crypt_pp.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="crypt_gost_28147-89_API.c" />
     <ClCompile Include="diffy_helman.cpp" />
     <ClCompile Include="hash_gost_p_34_11_2012.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="crypt_gost_28147-89.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
