@@ -10,9 +10,25 @@ namespace server
 	{
 	public:
 		server_network_exception(const std::string &msg) : msg_(msg) { }
-		__inline std::string what() { return msg_; }
+		inline std::string what() { return msg_; }
 	private:
 		const std::string msg_;
 	};
 }
+class server_disconnect_exception : std::exception
+{
+public:
+	server_disconnect_exception(const std::string &msg) : msg_(msg) { }
+	inline std::string what() { return msg_; }
+private:
+	const std::string msg_;
+};
+class config_parser_exception
+{
+public:
+	config_parser_exception(const std::string &msg) : msg_(msg) { }
+	__inline std::string wath() { return msg_; }
+private:
+	const std::string msg_;
+};
 #endif

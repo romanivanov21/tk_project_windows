@@ -18,11 +18,13 @@
 
 #include "inc_boost_heders.h"
 #include "crypt_gost_types.h"
-#include <string>
+#include <cstring>
+#include <mutex>
+#include <atomic>
 #include "server_timer.h"
-
+#include "server_types.h"
 /*********************************************************
-* Класс, инкапсулирующий работу сервреа					 *
+* Класс, инкапсулирующий сетевую часть сервера			 *
 **********************************************************/
 namespace server
 {
@@ -30,14 +32,21 @@ namespace server
 	{
 	public:
 		/*************************************************
+		* Коструктор класса server						 *
+		* Параметры конструктора:						 *
+		* 1. Логический порт сервреа					 *
+		**************************************************/
+		explicit server_network(const std::uint32_t port);
+
+		/*************************************************
 		* Деструктор класса server						 *
 		**************************************************/
 		~server_network();
 
-		static server::server_network* instance(const std::size_t &port);
 		/*************************************************
 		* Функция для начала работы сервреа				 *
 		**************************************************/
+		
 		void start();
 
 		/*************************************************
@@ -47,6 +56,7 @@ namespace server
 		* 2. размер массива								 *
 		**************************************************/
 		void send_bytes(byte *data, const std::size_t &size);
+		void send_bytes(PNET_BUFF_DATA net_data);
 
 		/*************************************************
 		* Функция для приёма данных отклиента			 *
@@ -56,29 +66,30 @@ namespace server
 		* Возвращаемое значение: число принятых байтов	 *
 		**************************************************/
 		boost::int32_t read_bytes(byte *data, const std::size_t &size);
+		boost::int32_t read_bytes(PNET_BUFF_DATA net_data);
 
 		/*************************************************
 		* Функция возвращает текущий логический порт	 *
 		* сервера										 *
 		* Возвращаемое значение: текущий логический порт *
 		**************************************************/
-		std::uint32_t current_port()const { return port_; }
+		std::uint32_t current_port()const;
 
 		/*************************************************
 		* Функция возвращает дата время соединения 		 *
 		* клиента										 *
 		* Возвращаемое значение: строка дата и время	 *
 		**************************************************/
-		std::string client_connect_data_time() { return client_connect_time_; }
+		std::string client_connect_data_time()const;
+		bool get_is_client_connect()const;
+		server_network *get_instanse(const std::uint32_t &port); 
+		
 	private:
-		/*************************************************
-		* Коструктор класса server						 *
-		* Параметры конструктора:						 *
-		* 1. Логический порт сервреа					 *
-		**************************************************/
-		explicit server_network(const std::uint32_t port);
+
+		void disable_connect();
 	private:
-		static server_network *s_;
+		SERVER_INFO server_info_;
+
 		server_time time_;
 		std::string client_connect_time_;
 		std::uint32_t port_;

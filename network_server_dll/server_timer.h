@@ -20,7 +20,7 @@ namespace server
 	public:
 		std::string current_date_time_string();
 		void timer_start();
-		boost::int64_t timer_stop();
+		std::string timer_stop();
 	private:
 		boost::posix_time::ptime start_time_;
 		boost::posix_time::ptime stop_time_;

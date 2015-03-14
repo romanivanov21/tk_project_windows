@@ -6,7 +6,7 @@
 #include"network_server_dll.h"
 #include"server_timer.h"
 
-SERVER_API void server_start();
+SERVER_API void server_start(const std::size_t &port);
 
 SERVER_API void server_shut_dwon();
 

@@ -11,9 +11,12 @@ namespace server
 		start_time_ = boost::posix_time::microsec_clock::local_time();
 	}
 
-	boost::int64_t server_time::timer_stop()
+	std::string server_time::timer_stop()
 	{
 		stop_time_ = boost::posix_time::microsec_clock::local_time();
-		return (start_time_ - stop_time_).total_microseconds();
+		boost::int64_t res_int64_t = ( start_time_ - stop_time_).total_microseconds();
+		throw;
+		std::string res_str;
+		return res_str;
 	}
 }
