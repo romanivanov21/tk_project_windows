@@ -197,12 +197,12 @@ std::string gost_test::test_crypt_data_read(const std::size_t &id_cryprdata)
 	if(!(cryptdata->LoadFile()))
 	{
 		delete cryptdata;
-		throw new gost_exception("The dataful file for testing didn't manage to be opened");
+		throw gost_exception("The dataful file for testing didn't manage to be opened");
 	}
 	TiXmlElement *pElem = cryptdata->FirstChildElement("cryptgost");
 	if(!pElem) {
 		delete cryptdata;
-		throw new std::string("Error read crdata");
+		throw gost_exception("Error read crdata");
 	}
 
 	std::string value = "";

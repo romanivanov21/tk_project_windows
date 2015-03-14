@@ -1,4 +1,4 @@
-#ifdef WIN32
+/*#ifdef WIN32
 #define _WIN32_WINNT 0x0501
 #include <stdio.h>
 #endif
@@ -153,7 +153,7 @@ void sync_echo() {
 		gost_key[i] = key_.GetByte(i);
 		printf("%x", gost_key[i]);
 	}
-	delete priv_B; delete pub_B;
+	delete priv_B; delete pub_B;*/
     
 
 	/*for(std::size_t i = 0; i < 32; i++)
@@ -186,17 +186,35 @@ void sync_echo() {
 	}
 	std::cout<<std::endl;
 	*/
-}
+//}
 
+#include"network_client_win.h"
 int main() 
 {
-	try
+	/*try
 	{
 		sync_echo();
 	}
 	catch(...)
 	{
 		std::cout<<"Error"<<std::endl;
+	}
+	getchar();*/
+	try
+	{
+	boost::shared_ptr<client_network_windows> client(new client_network_windows(8001,"127.0.0.1"));
+	client->client_connect();
+	byte destBuff[32];
+	byte buff[32];
+	while(true)
+	{
+		client->send_data(destBuff,32);
+		client->read_data(buff,32);
+	}
+	}
+	catch(client_exception &ex)
+	{
+		std::cout<<ex.wath()<<std::endl;
 	}
 	getchar();
 	return 0;

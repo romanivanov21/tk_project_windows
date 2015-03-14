@@ -16,7 +16,7 @@
 #include "crypt_gost_types.h"
 #include <string.h>
 	
-void word32_to_byte_data(word32 *word32_, byte *byte_)
+static void word32_to_byte_data(word32 *word32_, byte *byte_)
 {
 	memset(byte_, 0, 8);
 	word32 temp = word32_[0];
@@ -38,7 +38,7 @@ void word32_to_byte_data(word32 *word32_, byte *byte_)
 	}
 }
 
-void byte_to_word32_data( byte *byte_, word32 *word32_)
+static void byte_to_word32_data( byte *byte_, word32 *word32_)
 {
 	memset(word32_, 0, 8);
 
@@ -54,7 +54,7 @@ void byte_to_word32_data( byte *byte_, word32 *word32_)
 	}
 }
 
-void word32_to_byte_key(word32 *word32_, byte *byte_)
+static void word32_to_byte_key(word32 *word32_, byte *byte_)
 {
 	memset(byte_, 0, 32);
 	word32 temp = word32_[0];
@@ -123,7 +123,7 @@ void word32_to_byte_key(word32 *word32_, byte *byte_)
 		s = s - 8;
 	}
 }
-void byte_to_word32_key(byte *byte_, word32 *word32_)
+static void byte_to_word32_key(byte *byte_, word32 *word32_)
 {
 	memset(word32_, 0, 32);
 
