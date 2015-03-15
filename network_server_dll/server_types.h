@@ -7,10 +7,10 @@ namespace server
 {
 	enum
 	{
-		SIZE_DATA_BUFF_BYTE = 34,
+		SIZE_DATA_BUFF_BYTE = 36,
 		SIZE_CLIENT_ID_BYTE = 2,
-		SIZE_DATA_BYTE = 22,
-		SIZE_NET_BUFF_BYTE = 36
+		SIZE_DATA_BYTE = 32,
+		SIZE_NET_BUFF_BYTE = 37
 	};
 #pragma pack(push, 1)
 	typedef struct
@@ -55,6 +55,11 @@ namespace server
 	typedef struct 
 	{
 		byte net_buff[SIZE_NET_BUFF_BYTE];
+		word16 client_id;
+		bool is_crypt;
+		byte fl_info;
+		word16 comand;
+		byte data[32];
 
 	}NET_BUFF_DATA, *PNET_BUFF_DATA;
 

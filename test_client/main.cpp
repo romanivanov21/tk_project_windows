@@ -202,17 +202,12 @@ int main()
 	getchar();*/
 	try
 	{
-	boost::shared_ptr<client_network_windows> client(new client_network_windows(8001,"127.0.0.1"));
-	client->client_connect();
-	byte destBuff[32];
-	byte buff[32];
-	while(true)
-	{
-		client->send_data(destBuff,32);
-		client->read_data(buff,32);
+		boost::shared_ptr<client::client_network_windows> client(new client::client_network_windows(8001,"127.0.0.1"));
+		client->client_connect();
+		client->client_authentication();
+		client->read_data();
 	}
-	}
-	catch(client_exception &ex)
+	catch(client::client_exception &ex)
 	{
 		std::cout<<ex.wath()<<std::endl;
 	}

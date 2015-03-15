@@ -20,12 +20,12 @@
 
 int main(int argc, char *argv[])
 {
-	std::string arg_command = "";
+	std::string arg_command = "-dh";
 	const std::string path = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\crypt_gost_28147-89\\ginit.bin";
 	const std::string path_gdata = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\gost_test\\test_data\\gdata.xml";
 	const std::string path_hdata = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\gost_test\\test_data\\hdata.xml";
 	const std::string path_dhdata = "F:\\Диплом\\Рабочий репозиторий\\tk_project_windows\\gost_test\\test_data\\dhdata.xml";
-	if((argv[1] != NULL) || (argv[1] == "-g") || (argv[1] == "-h") || (argv[1] == "-dh") || (argv[1] == "-all"))
+	/*if((argv[1] != NULL) || (argv[1] == "-g") || (argv[1] == "-h") || (argv[1] == "-dh") || (argv[1] == "-all"))
 	{
 		arg_command = argv[1];
 	}
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 		std::cout<<"[-all]-algoritm"<<std::endl;
 		return -1;
 	}
-	if(arg_command == "-all")
+	*/if(arg_command == "-all")
 	{
 		try
 		{

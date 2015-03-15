@@ -38,6 +38,19 @@ namespace server
 		server_info_.client_info_.client_id = 0;
 		server_info_.client_info_.time_connect = "00::00";
 		server_info_.client_info_.time_disconnect = "00::00";
+
+		data_parser_ = new data_parser();
+
+		net_data_ = new NET_BUFF_DATA();
+		pars_data_ = new PARS_BUFF_DATA();
+
+		memset(gtype_.byte_decryption_data, 0, sizeof(byte) * SIZE_CRYPT_BUFF_BYTE);
+		memset(gtype_.byte_encryption_data, 0, sizeof(byte) * SIZE_CRYPT_BUFF_BYTE);
+		memset(gtype_.byte_key, 0, sizeof(byte) * SIZE_CRYPT_KEY_BYTE);
+		memset(gtype_.word_decryption_data, 0, sizeof(word32) * SIZE_CRYPT_BUFF_WORD);
+		memset(gtype_.word_encryption_data, 0, sizeof(word32) * SIZE_CRYPT_BUFF_WORD);
+		memset(gtype_.word_key, 0, sizeof(word32) * SIZE_CRYPT_KEY_WORD);
+
 	}
 
 	void server_network::start()
@@ -89,8 +102,9 @@ namespace server
 	server_network::~server_network()
 	{
 		disable_connect();
-		std::cout<<"Exit"<<std::endl;
-		system("pause");
+		delete data_parser_;
+		delete net_data_;
+		delete pars_data_;
 	}
 	std::uint32_t server_network::current_port()const { return port_; }
 	std::string server_network::client_connect_data_time()const { return client_connect_time_; }
@@ -103,25 +117,24 @@ namespace server
 		acceptor_.close();
 		socket_.close();
 	}
-	void server_network::send_bytes(PNET_BUFF_DATA net_buff)
+	void server_network::send_bytes()
 	{
-		assert(net_buff->net_buff != NULL);
 		try
 		{
-			socket_.write_some(boost::asio::buffer(net_buff->net_buff,SIZE_NET_BUFF_BYTE));
+			socket_.write_some(boost::asio::buffer(pars_data_->buff,SIZE_NET_BUFF_BYTE));
 		}
 		catch(...)
 		{
 			throw server::server_network_exception("Siket write_some error");
 		}
 	}
-	boost::int32_t server_network::read_bytes(PNET_BUFF_DATA net_buff)
+	boost::int32_t server_network::read_bytes()
 	{
-		assert(net_buff->net_buff != NULL);
 		boost::int32_t bytes = -1;
 		try
 		{
-			bytes = socket_.read_some(boost::asio::buffer(net_buff->net_buff, SIZE_NET_BUFF_BYTE));
+			bytes = socket_.read_some(boost::asio::buffer(net_data_->net_buff, SIZE_NET_BUFF_BYTE));
+			data_parser_->parse_read_data(net_data_, pars_data_);
 		}
 		catch(...)
 		{

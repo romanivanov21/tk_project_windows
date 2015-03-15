@@ -25,7 +25,7 @@ SERVER_API void server_start(const std::size_t &port)
 }
 SERVER_API void server_shut_dwon()
 {
-	if(!s->get_is_client_connect())//!(s->get_is_client_connect()))
+	if(!s->get_is_client_connect())
 	{
 		boost::shared_ptr<server_disconnect> s_disconnect(new server_disconnect());
 		try
@@ -45,9 +45,10 @@ SERVER_API void server_shut_dwon()
 SERVER_API boost::int32_t read_command()
 {
 	boost::int32_t result = -1;
-	return -1;
+	result = s->read_bytes();
+	return result;
 }
 SERVER_API void write_command()
 {
-
+	s->send_bytes();
 }

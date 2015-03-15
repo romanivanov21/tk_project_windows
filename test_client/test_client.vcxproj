@@ -85,10 +85,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="client_authentication_win.cpp" />
+    <ClCompile Include="client_data_parser_win.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="network_client_win.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="client_types.h" />
+    <ClInclude Include="client_authentication_win.h" />
+    <ClInclude Include="client_data_parser_win.h" />
     <ClInclude Include="network_client_win.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

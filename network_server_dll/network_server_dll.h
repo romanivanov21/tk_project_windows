@@ -17,6 +17,9 @@
 #define NETWORK_SERVER_DLL_VERSION 0x01
 
 #include "inc_boost_heders.h"
+#include "..\crypt_gost_28147-89\diffy_helman.h"
+#include "authentication_client.h"
+#include "data_parser.h"
 #include "crypt_gost_types.h"
 #include <cstring>
 #include <mutex>
@@ -28,16 +31,17 @@
 **********************************************************/
 namespace server
 {
+	class data_parser;
 	class server_network : private boost::noncopyable
 	{
-	public:
+	private:
 		/*************************************************
 		* Коструктор класса server						 *
 		* Параметры конструктора:						 *
 		* 1. Логический порт сервреа					 *
 		**************************************************/
 		explicit server_network(const std::uint32_t port);
-
+	public:
 		/*************************************************
 		* Деструктор класса server						 *
 		**************************************************/
@@ -56,7 +60,7 @@ namespace server
 		* 2. размер массива								 *
 		**************************************************/
 		void send_bytes(byte *data, const std::size_t &size);
-		void send_bytes(PNET_BUFF_DATA net_data);
+		void send_bytes();
 
 		/*************************************************
 		* Функция для приёма данных отклиента			 *
@@ -66,7 +70,7 @@ namespace server
 		* Возвращаемое значение: число принятых байтов	 *
 		**************************************************/
 		boost::int32_t read_bytes(byte *data, const std::size_t &size);
-		boost::int32_t read_bytes(PNET_BUFF_DATA net_data);
+		boost::int32_t read_bytes();
 
 		/*************************************************
 		* Функция возвращает текущий логический порт	 *
@@ -97,6 +101,15 @@ namespace server
 		boost::asio::io_service io_service_;
 		boost::asio::ip::tcp::acceptor acceptor_;
 		boost::asio::ip::tcp::socket socket_;
+
+		data_parser *data_parser_;
+
+		PNET_BUFF_DATA net_data_;
+		P_PARS_BUFF_DATA pars_data_;
+
+		GOST_TYPE gtype_;
+		DH_TYPE dh_type_;
+		diffy_helm *dh_;
 	};
 }
 #endif

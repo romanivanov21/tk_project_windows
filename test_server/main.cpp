@@ -10,13 +10,14 @@ int main() {
 		//boost::thread start_thread(&server_start,8001);
 		//_sleep(1000);
 		//boost::thread shut_dwon_thread(&server_shut_dwon);
-		//start_thread.join();
 		//shut_dwon_thread.join();
+		read_command();
+		write_command();
 	}
 	catch(server::server_network_exception &ex)
 	{
 		std::cout<<ex.what()<<std::endl;
 	}
-
+	getchar();
 	return 0;
 }
