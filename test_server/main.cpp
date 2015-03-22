@@ -13,6 +13,8 @@ int main() {
 		//shut_dwon_thread.join();
 		read_command();
 		write_command();
+		read_command();
+		write_command();
 	}
 	catch(server::server_network_exception &ex)
 	{

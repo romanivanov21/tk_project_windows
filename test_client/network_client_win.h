@@ -21,8 +21,7 @@ namespace client
 	private:
 		std::string str_;
 	};
-	
-	class authentication;
+
 	class client_data_parser;
 
 	class client_network_windows
@@ -31,7 +30,6 @@ namespace client
 		client_network_windows(const std::size_t &port_, const std::string ip_address);
 		~client_network_windows();
 		void client_connect();
-		void client_authentication();
 		void send_data();
 		void send_data(byte *dest_buff, const std::size_t &size);
 		boost::int32_t read_data(byte *dest_buff, const std::size_t &size);
@@ -43,15 +41,12 @@ namespace client
 		std::size_t port_;
 		std::string ip_address_;
 
-		authentication *authentication_client_;
 		client_data_parser *data_parser_;
 
-		CLIENT_DATA_BUFF data_buff_;
-		CLIENT_NET_BUF net_buff_;
-
-		GOST_TYPE gtype_;
-		DH_TYPE dh_type;
-		diffy_helm dh_;
+		PCLIENT_DATA_BUFF data_buff_;
+		PCLIENT_NET_BUF net_buff_;
+		PTR_DH_TYPE dh_type_;
+		PTR_GOST_TYPE crypt_g_;
 	};
 }
 #endif

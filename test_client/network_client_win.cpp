@@ -14,31 +14,36 @@ namespace client
 
 		ip_address_ = ip_addres;
 
-		authentication_client_ = new authentication();
-		data_parser_ = new client::client_data_parser();
+		data_parser_ = new client_data_parser();
+		data_buff_ = new CLIENT_DATA_BUFF();
+		data_buff_->comand = INICMD;
+		data_buff_->data_length = 0;
+		data_buff_->id_client = 0;
+		data_buff_->info_byte = 0;
+		memset(data_buff_->data_buff, 0x00, 38);
 
-		memset(data_buff_.data_buff, 0, SIZE_DATA_BUFF);
-		memset(net_buff_.net_buff_data, 0, SIZE_NET_BUFF);
-
-		memset(gtype_.byte_decryption_data, 0, sizeof(byte) * SIZE_CRYPT_BUFF_BYTE);
-		memset(gtype_.byte_encryption_data, 0, sizeof(byte) * SIZE_CRYPT_BUFF_BYTE);
-		memset(gtype_.byte_key, 0, sizeof(byte) * SIZE_CRYPT_KEY_BYTE);
-		memset(gtype_.word_decryption_data, 0, sizeof(word32) * SIZE_CRYPT_BUFF_WORD);
-		memset(gtype_.word_encryption_data, 0, sizeof(word32) * SIZE_CRYPT_BUFF_WORD);
-		memset(gtype_.word_key, 0, sizeof(word32) * SIZE_CRYPT_KEY_WORD);
-
+		net_buff_ = new CLIENT_NET_BUF();
+		net_buff_->comand = 0;
+		net_buff_->data_length = 0;
+		net_buff_->id_client = 0;
+		net_buff_->info_byte = 0;
+		memset(net_buff_->data_buff, 0x00, 38);
 	}
 	client_network_windows::~client_network_windows()
 	{
 		socket_.close();
-		delete authentication_client_;
 		delete data_parser_;
+		delete data_buff_;
+		delete net_buff_;
 	}
 	void client_network_windows::client_connect()
 	{
 		try
 		{
 			socket_.connect(ep_);
+#if _DEBUG
+			std::cout<<"connect to server"<<std::endl;
+#endif
 		}
 		catch(...)
 		{
@@ -48,13 +53,23 @@ namespace client
 	
 	void client_network_windows::send_data()
 	{
+		//берём данные из net_buff и парсим data_buff_
+		data_parser_->send_data_parser(data_buff_,net_buff_);
 		try
 		{
-			socket_.write_some(boost::asio::buffer(data_buff_.data_buff,SIZE_DATA_BUFF));
+			//отправляем данные из data_buff_
+			socket_.write_some(boost::asio::buffer(data_buff_->data_buff, 38));
+#if _DEBUG
+			std::cout<<"Send :";
+			for(std::size_t i = 0; i < 38; i++)
+			{
+				std::cout<<std::setw(2)<<std::setfill('0') <<std::hex <<(unsigned int)data_buff_->data_buff[i]<<" ";
+			}
+			std::cout<<std::endl;
+#endif
 		}
 		catch(...)
 		{
-			socket_.close();
 			throw client_exception("Error write_data");
 		}
 	}
@@ -67,7 +82,6 @@ namespace client
 		}
 		catch(...)
 		{
-			socket_.close();
 			throw client_exception("Error write_data");
 		}
 	}
@@ -76,12 +90,19 @@ namespace client
 		boost::int32_t bytes_recived = 0;
 		try
 		{
-			bytes_recived = socket_.read_some(boost::asio::buffer(net_buff_.net_buff_data,SIZE_NET_BUFF));
-			for(boost::int32_t i = 0; i < bytes_recived; i++)
+			//получамем данные и заполняем net_buff_
+			bytes_recived = socket_.read_some(boost::asio::buffer(net_buff_->data_buff, 38));
+
+			//парсим из net_buff
+			data_parser_->read_data_parser(net_buff_,data_buff_);
+#if _DEBUG
+			std::cout<<"Adopt: ";
+			for(std::size_t i = 0; i < 38; i++)
 			{
-				std::cout<<(unsigned int)net_buff_.net_buff_data[i];
+				std::cout<<std::setw(2)<<std::setfill('0') <<std::hex <<(unsigned int)net_buff_->data_buff[i]<<" ";
 			}
 			std::cout<<std::endl;
+#endif
 		}
 		catch(...)
 		{
@@ -104,10 +125,5 @@ namespace client
 			throw client_exception("Error read_data");
 		}
 		return bytes_recived;
-	}
-	void client_network_windows::client_authentication()
-	{
-		authentication_client_->send_hello(&data_buff_);
-		send_data();
 	}
 }

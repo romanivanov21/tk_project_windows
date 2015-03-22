@@ -34,23 +34,24 @@ namespace server
 		acceptor_(io_service_,boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port_)) 
 	{
 		assert(port != 0);
-		server_info_.is_client_connect_ = false;
-		server_info_.client_info_.client_id = 0;
-		server_info_.client_info_.time_connect = "00::00";
-		server_info_.client_info_.time_disconnect = "00::00";
 
 		data_parser_ = new data_parser();
 
-		net_data_ = new NET_BUFF_DATA();
-		pars_data_ = new PARS_BUFF_DATA();
-
-		memset(gtype_.byte_decryption_data, 0, sizeof(byte) * SIZE_CRYPT_BUFF_BYTE);
-		memset(gtype_.byte_encryption_data, 0, sizeof(byte) * SIZE_CRYPT_BUFF_BYTE);
-		memset(gtype_.byte_key, 0, sizeof(byte) * SIZE_CRYPT_KEY_BYTE);
-		memset(gtype_.word_decryption_data, 0, sizeof(word32) * SIZE_CRYPT_BUFF_WORD);
-		memset(gtype_.word_encryption_data, 0, sizeof(word32) * SIZE_CRYPT_BUFF_WORD);
-		memset(gtype_.word_key, 0, sizeof(word32) * SIZE_CRYPT_KEY_WORD);
-
+		net_data_ = new SERVER_NET_BUF();
+		memset(&net_data_->data_buff[0], 0x00, 38);
+		net_data_->comand = 0x0000;
+		net_data_->data_length = 0x00;
+		net_data_->info_byte = 0x00;
+		net_data_->id_client = 0x0000;
+		net_data_->data.clear();
+		pars_data_ = new SERVER_DATA_BUFF();
+		memset(&pars_data_->data_buff[0], 0x00, 38);
+		pars_data_->comand = 0x00000;
+		pars_data_->data_length = 0x00;
+		pars_data_->id_client = 0x0000;
+		pars_data_->info_byte = 0x00;
+		pars_data_->data.clear();
+		server_info_.is_client_connect_ = false;
 	}
 
 	void server_network::start()
@@ -64,6 +65,9 @@ namespace server
 			acceptor_.accept(socket_);
 			client_connect_time_ = time_.current_date_time_string();
 			server_info_.is_client_connect_ = true;
+#if _DEBUG
+			std::cout<<"connect client"<<std::endl;
+#endif
 		}
 		catch(...)
 		{
@@ -110,7 +114,7 @@ namespace server
 	std::string server_network::client_connect_data_time()const { return client_connect_time_; }
 	bool server_network::get_is_client_connect()const
 	{
-		return server_info_.is_client_connect_;
+		return true;//server_info_.is_client_connect_;
 	}
 	void server_network::disable_connect()
 	{
@@ -121,7 +125,21 @@ namespace server
 	{
 		try
 		{
-			socket_.write_some(boost::asio::buffer(pars_data_->buff,SIZE_NET_BUFF_BYTE));
+			pars_data_->comand = 0x00000;
+			pars_data_->data_length = 0x00;
+			pars_data_->id_client = 0x0000;
+			pars_data_->info_byte = 0x00;
+			pars_data_->data.clear();
+			data_parser_->parse_send_data(net_data_,pars_data_);
+			socket_.write_some(boost::asio::buffer(pars_data_->data_buff,SIZE_NET_BUFF_BYTE));
+#if _DEBUG
+			std::cout<<"Send: ";
+			for(std::size_t i = 0; i < 38; i++)
+			{
+				std::cout<<std::setw(2)<<std::setfill('0') <<std::hex <<(unsigned int) pars_data_->data_buff[i]<<" ";
+			}
+			std::cout<<std::endl;
+#endif
 		}
 		catch(...)
 		{
@@ -133,8 +151,22 @@ namespace server
 		boost::int32_t bytes = -1;
 		try
 		{
-			bytes = socket_.read_some(boost::asio::buffer(net_data_->net_buff, SIZE_NET_BUFF_BYTE));
-			data_parser_->parse_read_data(net_data_, pars_data_);
+			bytes = socket_.read_some(boost::asio::buffer(net_data_->data_buff, SIZE_NET_BUFF_BYTE));
+			net_data_->comand = 0x0000;
+			net_data_->data_length = 0x00;
+			net_data_->info_byte = 0x00;
+			net_data_->id_client = 0x0000;
+			net_data_->data.clear();
+			//считываем данные в net_buff_ и парсим
+			data_parser_->parse_read_data(net_data_);
+#if _DEBUG
+			std::cout<<"Adopt: ";
+			for(std::size_t i = 0; i < 38; i++)
+			{
+				std::cout<<std::setw(2)<<std::setfill('0') <<std::hex <<(unsigned int)net_data_->data_buff[i]<<" ";
+			}
+			std::cout<<std::endl;
+#endif
 		}
 		catch(...)
 		{

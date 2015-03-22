@@ -42,13 +42,25 @@ SERVER_API void server_shut_dwon()
 		// здесь должен быть команда завершени€ сервреа
 	}
 }
-SERVER_API boost::int32_t read_command()
+SERVER_API void read_command()
 {
-	boost::int32_t result = -1;
-	result = s->read_bytes();
-	return result;
+	try
+	{
+		s->read_bytes();
+	}
+	catch(server::server_network_exception &ex)
+	{
+		throw server::server_network_exception(ex.what());
+	}
 }
 SERVER_API void write_command()
 {
-	s->send_bytes();
+	try
+	{
+		s->send_bytes();
+	}
+	catch(server::server_network_exception &ex)
+	{
+		throw server::server_network_exception(ex.what());
+	}
 }

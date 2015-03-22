@@ -41,5 +41,8 @@
     <ClInclude Include="client_types.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="comand_pars.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

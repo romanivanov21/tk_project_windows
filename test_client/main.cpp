@@ -204,7 +204,9 @@ int main()
 	{
 		boost::shared_ptr<client::client_network_windows> client(new client::client_network_windows(8001,"127.0.0.1"));
 		client->client_connect();
-		client->client_authentication();
+		client->send_data();
+		client->read_data();
+		client->send_data();
 		client->read_data();
 	}
 	catch(client::client_exception &ex)

@@ -14,11 +14,8 @@ namespace server
 		autentication_client();
 		~autentication_client();
 
-		void set_p(P_PARS_BUFF_DATA data_pars);
-
 	private:
 		config_parser *c_pars_;
-		diffy_helm *dh_;
 	};
 }
 #endif

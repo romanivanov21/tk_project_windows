@@ -12,16 +12,30 @@ namespace client
 		client_data_parser();
 		~client_data_parser();
 		
-		void send_data_parser(PCLIENT_NET_BUF net_buf, PCLIENT_DATA_BUFF data_buff);
-		void send_data_parser(PCLIENT_DATA_BUFF net_buf);
+		void send_data_parser(PCLIENT_DATA_BUFF data_buff, PCLIENT_NET_BUF net_buf);
 		void read_data_parser(PCLIENT_NET_BUF net_buf, PCLIENT_DATA_BUFF data_buff);
-		
+	private:
+
+		bool is_crypt(const byte &data)const;
+
 		void set_client_id(PCLIENT_DATA_BUFF data);
-		void set_byte_autch(PCLIENT_DATA_BUFF data);
-		void set_hello_comand(PCLIENT_DATA_BUFF data);
+		void set_byte_info(PCLIENT_DATA_BUFF data);
+		void set_comand(PCLIENT_DATA_BUFF data);
+		void set_data_and_length(PCLIENT_DATA_BUFF data);
+
+		void get_client_id(PCLIENT_NET_BUF data);
+		void get_info_byte(PCLIENT_NET_BUF data);
+		void get_comand(PCLIENT_NET_BUF data);
+		void get_data_and_length(PCLIENT_NET_BUF data);
+
+		void send_hello(PCLIENT_DATA_BUFF data);
+		void send_p_hash(PCLIENT_DATA_BUFF data);
 	
 	private:
-		client_network_windows *netw_;
+		diffy_helm *dh_;
+		PTR_DH_TYPE dh_type_;
+		PTR_GOST_TYPE crypt_g_;
+		PTR_HASH_TYPE hash_;
 	};
 }
 #endif

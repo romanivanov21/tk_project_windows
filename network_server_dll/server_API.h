@@ -10,7 +10,7 @@ SERVER_API void server_start(const std::size_t &port);
 
 SERVER_API void server_shut_dwon();
 
-SERVER_API boost::int32_t read_command();
+SERVER_API void read_command();
 
 SERVER_API void write_command();
 

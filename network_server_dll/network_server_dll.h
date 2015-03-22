@@ -17,7 +17,6 @@
 #define NETWORK_SERVER_DLL_VERSION 0x01
 
 #include "inc_boost_heders.h"
-#include "..\crypt_gost_28147-89\diffy_helman.h"
 #include "authentication_client.h"
 #include "data_parser.h"
 #include "crypt_gost_types.h"
@@ -104,12 +103,8 @@ namespace server
 
 		data_parser *data_parser_;
 
-		PNET_BUFF_DATA net_data_;
-		P_PARS_BUFF_DATA pars_data_;
-
-		GOST_TYPE gtype_;
-		DH_TYPE dh_type_;
-		diffy_helm *dh_;
+		PSERVER_NET_BUF net_data_;
+		PSERVER_DATA_BUFF pars_data_;
 	};
 }
 #endif
