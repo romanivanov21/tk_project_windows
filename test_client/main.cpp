@@ -208,6 +208,13 @@ int main()
 		client->read_data();
 		client->send_data();
 		client->read_data();
+		client->send_data();
+		client->read_data();
+		client->send_data();
+		client->read_data();
+		client->send_data();
+		client->read_data();
+		client->send_data();
 	}
 	catch(client::client_exception &ex)
 	{

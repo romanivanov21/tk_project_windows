@@ -37,6 +37,12 @@ namespace server
 		bool is_crypt(const byte &data)const;
 		void send_p_dh(PSERVER_DATA_BUFF data_pars, PSERVER_NET_BUF net_data);
 		void send_phashcmd(PSERVER_DATA_BUFF data_pars, PSERVER_NET_BUF net_data);
+		void send_q_dh(PSERVER_DATA_BUFF data_pars, PSERVER_NET_BUF data_net);
+		void send_qhashcmd(PSERVER_DATA_BUFF data_pars, PSERVER_NET_BUF net_data);
+		void send_spublic_key(PSERVER_DATA_BUFF data_pars, PSERVER_NET_BUF net_data);
+		void send_spublic_key_hash(PSERVER_DATA_BUFF data_pars, PSERVER_NET_BUF net_data);
+		void send_is_spublic_key_valid(PSERVER_DATA_BUFF data_pars, PSERVER_NET_BUF net_data);
+		void send_cpublic_key(PSERVER_DATA_BUFF data_pars, PSERVER_NET_BUF net_data);
 	
 	private:
 		autentication_client *autentication_client_;

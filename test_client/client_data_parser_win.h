@@ -30,6 +30,10 @@ namespace client
 
 		void send_hello(PCLIENT_DATA_BUFF data);
 		void send_p_hash(PCLIENT_DATA_BUFF data);
+		void send_q_hash(PCLIENT_DATA_BUFF data);
+		void send_spublic_key_hash(PCLIENT_DATA_BUFF data);
+		void send_spublic_key_ok(PCLIENT_DATA_BUFF data);
+		void send_cpublic_key_hash(PCLIENT_DATA_BUFF data, PCLIENT_NET_BUF net_buff);
 	
 	private:
 		diffy_helm *dh_;

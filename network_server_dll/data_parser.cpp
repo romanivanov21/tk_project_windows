@@ -2,6 +2,8 @@
 #include"data_parser.h"
 #include"gost_include.h"
 #include"gost_types_convert.h"
+#include <iomanip>
+#include <iostream>
 #include<string>
 #include<assert.h>
 namespace server
@@ -47,6 +49,24 @@ namespace server
 			break;
 		case PHASHCMD:
 			send_phashcmd(data_pars, data_net);
+			break;
+		case QHASHCMD:
+			send_qhashcmd(data_pars, data_net);
+			break;
+		case SPUBLICKEYHASHCMD:
+			send_spublic_key_hash(data_pars, data_net);
+			break;
+		case CPUBLICKEYCMD:
+			send_cpublic_key(data_pars, data_net);
+			break;
+		case CPUBLICKEYOK:
+			dh_->generate_K(dh_type_->keyB, SIZE_DH_BUFF_BYTE, dh_type_->gkey, SIZE_DH_BUFF_BYTE);
+			std::cout<<"gkey :";
+			for(std::size_t i = 0; i < SIZE_DH_BUFF_BYTE; i++)
+			{
+				std::cout<<std::setw(2)<<std::setfill('0') <<std::hex <<(unsigned int)dh_type_->gkey[i]<<" ";
+			}
+			std::cout<<std::endl;
 			break;
 		}
 	}
@@ -113,7 +133,10 @@ namespace server
 	void data_parser::set_client_id(PSERVER_DATA_BUFF data)
 	{
 		assert(data != nullptr);
-		memcpy(&data->data_buff[1], &data->id_client, 2);
+		data->data_buff[1] |= data->id_client;
+		data->id_client = data->id_client<<8;
+		data->data_buff[0] |= data->id_client;
+		//memcpy(&data->data_buff[1], &data->id_client, sizeof(word16));
 	}
 	void data_parser::set_data_and_length(PSERVER_DATA_BUFF data)
 	{
@@ -158,22 +181,98 @@ namespace server
 		hash_256(hash_g_->data256, SIZE_DH_BUFF_BYTE, hash_g_->hash256);
 		if(!memcmp(&data_net->data[0], hash_g_->hash256, SIZE_DH_BUFF_BYTE))
 		{
-			data_pars->comand = QSETCMD;
-			set_comand(data_pars);
-			data_pars->info_byte = 0x00;
-			set_info_byte(data_pars);
-			data_pars->id_client = data_net->id_client;
-			set_client_id(data_pars);
-			dh_->get_q(dh_type_->q_byte,SIZE_DH_BUFF_BYTE);
-			data_pars->data.clear();
-			data_pars->data.resize(SIZE_DH_BUFF_BYTE);
-			memcpy(&data_pars->data[0],dh_type_->q_byte, SIZE_DH_BUFF_BYTE);
-			data_pars->data_length = SIZE_DH_BUFF_BYTE;
-			set_data_and_length(data_pars);
+			send_q_dh(data_pars, data_net);
 		}
 		else
 		{
 			send_p_dh(data_pars,data_net);
 		}
+	}
+	void data_parser::send_q_dh(PSERVER_DATA_BUFF data_pars, PSERVER_NET_BUF data_net)
+	{
+		data_pars->comand = QSETCMD;
+		set_comand(data_pars);
+		dh_->get_g(data_pars->info_byte);
+		set_info_byte(data_pars);
+		data_pars->id_client = data_net->id_client;
+		set_client_id(data_pars);
+		dh_->get_q(dh_type_->q_byte,SIZE_DH_BUFF_BYTE);
+		data_pars->data.clear();
+		data_pars->data.resize(SIZE_DH_BUFF_BYTE);
+		memcpy(&data_pars->data[0],dh_type_->q_byte, SIZE_DH_BUFF_BYTE);
+		data_pars->data_length = SIZE_DH_BUFF_BYTE;
+		set_data_and_length(data_pars);
+	}
+	void data_parser::send_spublic_key(PSERVER_DATA_BUFF data_buff, PSERVER_NET_BUF net_buff)
+	{
+		data_buff->info_byte = 0x00;
+		set_info_byte(data_buff);
+		data_buff->id_client = net_buff->id_client;
+		set_client_id(data_buff);
+		data_buff->comand = SPUBLICKEYCMD;
+		set_comand(data_buff);
+		data_buff->data.clear();
+		data_buff->data.resize(SIZE_DH_BUFF_BYTE);
+		data_buff->data.reserve(0);
+		std::vector<byte>::iterator it = data_buff->data.begin();
+		dh_->generate_A(dh_type_->keyA, SIZE_DH_BUFF_BYTE*sizeof(byte));
+		memcpy(&(*it),dh_type_->keyA,SIZE_DH_BUFF_BYTE*sizeof(byte));
+		data_buff->data_length = data_buff->data.size();
+		set_data_and_length(data_buff);
+	}
+	void data_parser::send_qhashcmd(PSERVER_DATA_BUFF data_buff, PSERVER_NET_BUF net_buff)
+	{
+		memset(hash_g_->hash256, 0x00, SIZE_HASH256_BYTE);
+		hash_256(dh_type_->q_byte,SIZE_DH_BUFF_BYTE, hash_g_->hash256);
+		if(!memcmp(hash_g_->hash256, &net_buff->data[0], SIZE_HASH256_BYTE))
+		{
+			send_spublic_key(data_buff, net_buff);
+		}
+		else
+		{
+			send_q_dh(data_buff, net_buff);
+		}
+	}
+	void data_parser::send_spublic_key_hash(PSERVER_DATA_BUFF data_buff, PSERVER_NET_BUF net_buff)
+	{
+		memset(hash_g_->hash256, 0x00, SIZE_HASH256_BYTE*sizeof(byte));
+		hash_256(dh_type_->keyA, SIZE_DH_BUFF_BYTE*sizeof(byte),hash_g_->hash256);
+		if(!memcmp(hash_g_->hash256, &(*net_buff->data.begin()),net_buff->data.size()))
+		{
+			send_is_spublic_key_valid(data_buff, net_buff);
+		}
+		else
+		{
+			send_spublic_key(data_buff, net_buff);
+		}
+	}
+	void data_parser::send_cpublic_key(PSERVER_DATA_BUFF data_buff, PSERVER_NET_BUF net_buff)
+	{
+		data_buff->id_client = net_buff->id_client;
+		set_client_id(data_buff);
+		data_buff->comand = CPUBLICKEYHASHCMD;
+		set_comand(data_buff);
+		data_buff->info_byte = 0x00;
+		set_info_byte(data_buff);
+		memcpy(dh_type_->keyB,&(*net_buff->data.begin()), net_buff->data.size());
+		memset(hash_g_->hash256, 0x00, SIZE_HASH256_BYTE*sizeof(byte));
+		hash_256(dh_type_->keyB, SIZE_DH_BUFF_BYTE*sizeof(byte),hash_g_->hash256);
+		data_buff->data.clear();
+		data_buff->data.resize(SIZE_HASH256_BYTE);
+		data_buff->data.reserve(0);
+		memcpy(&(*data_buff->data.begin()),hash_g_->hash256, data_buff->data.size());
+		data_buff->data_length = data_buff->data.size();
+		set_data_and_length(data_buff);
+	}
+	void data_parser::send_is_spublic_key_valid(PSERVER_DATA_BUFF data_buff, PSERVER_NET_BUF net_buff)
+	{
+		data_buff->id_client = net_buff->id_client;
+		set_client_id(data_buff);
+		data_buff->comand = SPUBLICKEYOK;
+		set_comand(data_buff);
+		data_buff->info_byte = 0x00;
+		set_info_byte(data_buff);
+		data_buff->data_length = 0x00;
+		set_data_and_length(data_buff);
 	}
 }
