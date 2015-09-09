@@ -37,8 +37,8 @@ int main(int argc, char *argv[])
 		std::cout<<"[-all]-algoritm"<<std::endl;
 		return -1;
 	}
-	*/if(arg_command == "-all")
-	{
+	*///if(arg_command == "-all")
+	//{
 		try
 		{
 			boost::shared_ptr<gost_test> g(new gost_test(path, path_gdata, 1));
@@ -66,8 +66,8 @@ int main(int argc, char *argv[])
 			return -1;
 		}
 		printf("\nAll tests passed.\n");
-	}
-	if(arg_command == "-g")
+	//}
+	/*if(arg_command == "-g")
 	{
 		try
 		{
@@ -119,6 +119,6 @@ int main(int argc, char *argv[])
 			return -1;
 		}
 		printf("\nAll tests passed.\n");
-	}
+	}*/
 	return 0;
 }

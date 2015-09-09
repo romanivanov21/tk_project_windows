@@ -18,6 +18,7 @@
 #include <string>
 #include <iostream>
 
+#define CONSOLE_APPLICATION 0x01
 void create_process_client();
 
 class test : private boost::noncopyable
