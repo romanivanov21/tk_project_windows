@@ -20,277 +20,97 @@
 
 void bin_parser(byte *c, const size_t *size)
 {
-	size_t i = 0;
-	assert((c != NULL) || (*size != 0));
-	for(i = 0; i < *size; i++)
+    size_t i = 0;
+	for( i = 0; i < *(size); i++ )
 	{
-		switch(c[i])
-		{
-		case '0':
-			c[i] = 0x0;
-			break;
-		case '1':
-			c[i] = 0x1;
-			break;
-		case '2':
-			c[i] = 0x2;
-			break;
-		case '3':
-			c[i] = 0x3;
-			break;
-		case '4':
-			c[i] = 0x4;
-			break;
-		case'5':
-			c[i] = 0x5;
-			break;
-		case'6':
-			c[i] = 0x6;
-			break;
-		case'7':
-			c[i] = 0x7;
-			break;
-		case'8':
-			c[i] = 0x8;
-			break;
-		case'9':
-			c[i] = 0x9;
-			break;
-		case'a':
-			c[i] = 0xA;
-			break;
-		case'b':
-			c[i] = 0xB;
-			break;
-		case'c':
-			c[i] = 0xC;
-			break;
-		case'd':
-			c[i] = 0xD;
-			break;
-		case'e':
-			c[i] = 0xE;
-			break;
-		case'f':
-			c[i] = 0xF;
-			break;
-		}
+		c[i] = atoi(c[i]);
 	}
 }
 
-void data_to_k(const byte *data)
+CRYPT_GOST_API INIT_ERROR read_vector_init(const char *path, const size_t *length)
 {
-	size_t i = 0;
-	size_t j = 0;
-	assert(data != NULL);
-	for(i = 0; i < 16; i++)
-	{
-		k8[j] = data[i];
-		j++;
-	}
-	j = 0;
-	for(i = 18; i < 34; i++ )
-	{
-		k7[j] = data[i];
-		j++;
-	}
-	j = 0;
-	for(i = 36; i < 52; i++)
-	{
-		k6[j] = data[i];
-		j++;
-	}
-	j = 0;
-	for(i = 54; i < 70; i++)
-	{
-		k5[j] = data[i];
-		j++;
-	}
-	j = 0;
-	for(i = 72; i < 88; i++)
-	{
-		k4[j] = data[i];
-		j++;
-	}
-	j = 0;
-	for(i = 90; i < 106; i++)
-	{
-		k3[j] = data[i];
-		j++;
-	}
-	j = 0;
-	for(i = 108; i < 124; i++)
-	{
-		k2[j] = data[i];
-		j++;
-	}
-	j = 0;
-	for(i = 126; i < 142; i++)
-	{
-		k1[j] = data[i];
-		j++;
-	}
-}
+	load_vinit res = INIT_ERROR;
+	FILE *fd;
+	size_t file_size = 0;
+	byte *buffer;
 
-CRYPT_GOST_API word32 read_vector_init(const char *path, const size_t *length)
-{
-	size_t i = 0;
-	FILE *file;
-	byte *data;
-	size_t file_size = 0; 
-	assert(*length != 0);
-	if((path == NULL) || (*length == 0))
+	assert( path );
+	assert( (*length) != 0);
+	
+	if( ( path ) && ( ( *length ) ) )
 	{
-		return PATCH_EMPTY;
-	}
-
-#if DEBUG_INFO_PRINT
-	printf("The path to the vector initialization:\n");
-	for(i = 0; i < *length; i++)
-	{
-		printf("%c",path[i]);
-	}
-	printf("\n");
-	printf("----------------------------------------------------------------------------\n");
+#ifdef _DEBUG
+		printf("The path of the vector initialization:\n");
+		printf("%s\n",path);
+		printf("----------------------------------------------------------------------------\n");
 #endif
-	if((file = fopen(path, "rb")) != NULL)
-	{
-#if DEBUG_INFO_PRINT
-		printf("Open file: [OK] \n");
-#endif
-		file_size = _filelength(_fileno(file));
-#if DEBUG_INFO_PRINT
-		printf("File size: %d",file_size);
-		printf(" Byte \n");
-		printf("------------------------------------------------------------------------[OK]\n");
-#endif
-		if(file_size != 0)
+	
+		if( (fd = fopen(path, "rb") ) )
 		{
-			size_t read_byte;
-			data = (byte*)malloc((file_size * sizeof(byte)));
-			memset(data,0,(file_size * sizeof(byte)));
-			read_byte = fread(data, sizeof(byte), file_size/sizeof(byte), file);
-			if(read_byte == 0)
-			{
-#if DEBUG_INFO_PRINT 
-				printf("File is empty [ERROR]");
-#endif
-				fclose(file);
-				return FILE_IS_EMPTY;
-			}
-			fclose(file);
-#if DEBUG_INFO_PRINT
+			size_t strnum = 0;
+#ifdef _DEBUG
+			printf("Open file: [OK] \n");
+			printf("File size: %d Byte \n", _filelength( _fileno( fd ) );
+			printf("------------------------------------------------------------------------[OK]\n");
+#endif //_DEBUG
+			buffer = ( byte *)malloc( key_size16 );
+			memset( buffer, 0x00, key_size16 );
+#ifdef _DEBUG
 			printf("Data from the file: \n");
-#endif
-			bin_parser(data,&file_size);
-
-#if DEBUG_INFO_PRINT
-			for(i = 0; i < 16; i++)
+#endif //_DEBUG
+			while( fgets( buffer, buffer_size, fd ) )
 			{
-				printf("%x",data[i]);
+				bin_parser( buffer, &buffer_size );
+#ifdef _DEBUG
+				printf("%x", buffer );
+#endif //_DEBUG
+				switch( strnum )
+				{
+				case 0:
+					memcpy( k8, buffer, buffer_size );
+					break;
+				case 1;
+					memcpy( k7, buffer, buffer_size );
+					break;
+				case 2:
+					memcpy( k6, buffer, buffer_size );
+					break;
+				case 3:
+					memcpy( k5, buffer, buffer_size );
+					break;
+				case 4: 
+					memcpy( k4, buffer, buffer_size );
+					break;
+				case 5: 
+					memcpy( k3, buffer, buffer_size );
+					break;
+				case 6:
+					memcpy( k2, buffer, buffer_size );
+					break;
+				case 7:
+					memcpy( k1, buffer, buffer_size );
+					break;
+				default:
+					break;
+				}	
+				if( strnum < 8 )
+					strnum++;
+				else
+					break;
 			}
-			printf("\n");
-			for(i = 18; i < 34; i++)
-			{
-				printf("%x",data[i]);
-			}
-			printf("\n");
-			for(i = 36; i < 52; i++)
-			{
-				printf("%x",data[i]);
-			}
-			printf("\n");
-			for(i = 54; i < 70; i++)
-			{
-				printf("%x",data[i]);
-			}
-			printf("\n");
-			for(i = 72; i < 88; i++)
-			{
-				printf("%x",data[i]);
-			}
-			printf("\n");
-			for(i = 90; i < 106; i++)
-			{
-				printf("%x",data[i]);
-			}
-			printf("\n");
-			for(i = 108; i < 124; i++)
-			{
-				printf("%x",data[i]);
-			}
-			printf("\n");
-			for(i = 126; i < 142; i++)
-			{
-				printf("%x",data[i]);
-			}
-			printf("\n");
-			printf("------------------------------------------------------------------------[OK]\n");
-#endif
-			data_to_k(data);
-			i = 0;
-#if DEBUG_INFO_PRINT 
-			printf("Vector init:\n");
-			for(i = 0; i < key_size16; i++)
-			{
-				printf("%x", k8[i]);
-			}
-			printf("\n");
-			for(i = 0; i < key_size16; i++)
-			{
-				printf("%x", k7[i]);
-			}
-			printf("\n");
-			for(i = 0; i < key_size16; i++)
-			{
-				printf("%x", k6[i]);
-			}
-			printf("\n");
-			for(i = 0; i < key_size16; i++)
-			{
-				printf("%x", k5[i]);
-			}
-			printf("\n");
-			for(i = 0; i < key_size16; i++)
-			{
-				printf("%x", k4[i]);
-			}
-			printf("\n");
-			for(i = 0; i < key_size16; i++)
-			{
-				printf("%x", k3[i]);
-			}
-			printf("\n");
-			for(i = 0; i < key_size16; i++)
-			{
-				printf("%x", k2[i]);
-			}
-			printf("\n");
-			for(i = 0; i < key_size16; i++)
-			{
-				printf("%x", k1[i]);
-			}
-			printf("\n");
-			printf("------------------------------------------------------------------------[OK]\n");
-			free(data);
-#endif
-			return OK;
+			if( strnum == 8 )
+				res = OK;
+			
+			free( buffer );
+			close( fd );
 		}
 		else
 		{
-#if DEBUG_INFO_PRINT
-			printf("File size is null [ERROR]");
-#endif
-			return FILE_SIZE_IS_NULL;
+			printf( "File is not open [ERROR] \n" );
+			res = ERROR_OPEN_FILE;
 		}
 	}
-	else
-	{
-#if DEBUG_INFO_PRINT
-		printf("File is not open [ERROR]");
-#endif
-		return ERROR_OPEN_FILE;
-	}
+	return res;
 }
 
 CRYPT_GOST_API void key_box_init(void)
